@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 build/*.pdf
 !build/DSA-for-AI-ML-Engineers.pdf
+!build/AI-ML-Engineer-Skill-Map.pdf

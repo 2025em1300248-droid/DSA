@@ -1,9 +1,20 @@
-# Data Structures & Algorithms for AI/ML Engineers
+# Two books for AI/ML engineers
 
-A complete, self-contained 367-page book, written and typeset from source in
-this repository.
+Two complete, self-contained books, written and typeset from source in this
+repository. No LaTeX, no external services — the typesetting engine in
+`book/engine/` is part of the repository and builds both volumes.
 
-**[→ build/DSA-for-AI-ML-Engineers.pdf](build/DSA-for-AI-ML-Engineers.pdf)**
+| | Volume | Pages |
+|---|---|---|
+| **I** | **[Data Structures & Algorithms for AI/ML Engineers](build/DSA-for-AI-ML-Engineers.pdf)** — the algorithmic core, taught from first principles | 367 |
+| **II** | **[The AI/ML Engineer Skill Map](build/AI-ML-Engineer-Skill-Map.pdf)** — the current competency roadmap, role by role | 123 |
+
+The first teaches you the material. The second tells you what material to
+learn, in what order, for which job.
+
+---
+
+# Volume I — Data Structures & Algorithms for AI/ML Engineers
 
 ## What it is
 
@@ -51,14 +62,52 @@ splitting, t-digest.
 Every algorithm in the two problem-set chapters was verified against a
 brute-force reference on thousands of randomised inputs before publication.
 
+---
+
+# Volume II — The AI/ML Engineer Skill Map
+
+**[→ build/AI-ML-Engineer-Skill-Map.pdf](build/AI-ML-Engineer-Skill-Map.pdf)**
+
+A 123-page competency roadmap, current as of 2026. Twenty-four chapters in
+eight parts, covering what an AI/ML engineer is actually expected to know
+today — and, unusually, what has stopped mattering.
+
+| Part | Chapters | Subject |
+|---|---|---|
+| I | 1–2 | The landscape: five jobs behind one job title; how to use the map |
+| II | 3–5 | Foundations: Python and engineering, mathematics, algorithms and systems |
+| III | 6–7 | Data: pipelines and feature stores, dataset curation |
+| IV | 8–10 | Modelling: classical ML, deep learning, training at scale |
+| V | 11–15 | Foundation models: LLM internals, retrieval and RAG, post-training, agents, evaluation |
+| VI | 16–18 | Production: inference and serving, MLOps, hardware and systems |
+| VII | 19–20 | Judgement: safety, security and compliance; product and communication |
+| VIII | 21–24 | Getting there: what changed, four learning tracks, portfolio, self-assessment |
+
+Every chapter carries an explicit skill inventory split into **essential**,
+**core** and **advanced** tiers, a *how to tell you have it* section with a
+concrete build task, a realistic time-to-competence estimate, and the failure
+modes that come with the territory. Chapter 21 states plainly which skills
+became scarce recently and which are no longer worth your study time;
+Chapter 24 is a 28-row, five-level rubric for scoring yourself honestly.
+
+- 123 pages, 24 chapters, 8 parts
+- ~29,000 words
+- 11 vector figures, 18 reference tables, 218 callout boxes
+- Four week-by-week learning tracks with per-week deliverables
+- Six portfolio project specifications, each containing a real decision
+- Full PDF outline (126 bookmarks), two tables of contents
+
 ## Building it
 
 ```bash
 pip install reportlab pygments pyphen
-cd book && python3 build_book.py -o ../build/DSA-for-AI-ML-Engineers.pdf
+
+cd book     && python3 build_book.py    -o ../build/DSA-for-AI-ML-Engineers.pdf
+cd roadmap  && python3 build_roadmap.py -o ../build/AI-ML-Engineer-Skill-Map.pdf
 ```
 
-Takes about 22 seconds. No LaTeX, no external services.
+Volume I takes about 22 seconds, Volume II about 3. Both are multi-pass
+builds (the tables of contents and page labels have to converge).
 
 ## Repository layout
 
@@ -77,14 +126,21 @@ book/
     pages.py         cover, part dividers, chapter openers
   figures/*.py       75 diagrams, one function each
   fonts/             Source Serif Pro, Source Sans Pro, DejaVu Sans Mono
+roadmap/
+  build_roadmap.py   volume II, reusing book/engine and book/figures
+  manifest.py        metadata, 8 parts, 24 chapters
+  content/*.md       24 chapters + front matter
+  figures_roadmap.py 11 diagrams specific to this volume
 build/
   DSA-for-AI-ML-Engineers.pdf
+  AI-ML-Engineer-Skill-Map.pdf
 ```
 
 The content format is a small extended Markdown: headings, lists, tables,
 fenced code, `$math$`, `:::callout` blocks, and `@fig:` references to the
 diagram registry. Adding a chapter means adding one file to `content/` and
-one line to `manifest.py`.
+one line to `manifest.py`. Volume II imports the engine and figure registry
+from `book/` unchanged and only adds its own content and diagrams.
 
 ## Fonts
 
