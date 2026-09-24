@@ -10,8 +10,8 @@ import math
 from reportlab.lib.colors import HexColor, Color
 from reportlab.platypus import Flowable, KeepTogether, Paragraph
 
-from .style import (C, FRAME_W, MONO, MONO_B, SANS, SANS_B, SANS_I, SANS_SB,
-                    SERIF, SERIF_I, styles)
+from .style import (C, FRAME_W, FALLBACK, MONO, MONO_B, SANS, SANS_B, SANS_I,
+                    SANS_SB, SERIF, SERIF_I, covers, styles)
 from .markup import plain
 
 # Palette for figures
@@ -56,6 +56,9 @@ class Pen:
     # -- primitives -------------------------------------------------------
     def text(self, x, y, s, size=8, color=D.ink, font=SANS, anchor="c",
              rotate=0):
+        s = str(s)
+        if any(ord(ch) > 127 and not covers(font, ch) for ch in s):
+            font = FALLBACK
         c = self.c
         c.saveState()
         c.setFillColor(color)

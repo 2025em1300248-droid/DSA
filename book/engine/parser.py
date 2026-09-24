@@ -115,6 +115,11 @@ def scan(lines):
                 blocks.append({"t": "fig", "spec": val})
             elif key == "tbl":
                 blocks.append({"t": "tblcap", "text": val})
+            elif key == "cols":
+                blocks.append({"t": "cols", "w": [float(x) for x in
+                                                 val.replace(" ", "").split(",")]})
+            elif key == "tsize":
+                blocks.append({"t": "tsize", "n": float(val)})
             elif key == "pagebreak":
                 blocks.append({"t": "pagebreak"})
             elif key == "needspace":
@@ -203,6 +208,8 @@ def render(blocks, ctx, in_callout=False, width=None):
     width = width or ctx.width
     prev = None
     pending_caption = None
+    pending_cols = None
+    pending_size = None
 
     for b in blocks:
         t = b["t"]
@@ -240,7 +247,10 @@ def render(blocks, ctx, in_callout=False, width=None):
         elif t == "table":
             hdr, rows, aligns = _parse_table(b["rows"])
             out.append(Spacer(0, 6))
-            out.append(md_table(hdr, rows, aligns, width=width))
+            out.append(md_table(hdr, rows, aligns, width=width,
+                                widths=pending_cols, font_size=pending_size))
+            pending_cols = None
+            pending_size = None
             if pending_caption:
                 ctx.tbl_count += 1
                 out.append(Paragraph(
@@ -251,6 +261,10 @@ def render(blocks, ctx, in_callout=False, width=None):
             out.append(Spacer(0, 5))
         elif t == "tblcap":
             pending_caption = b["text"]
+        elif t == "cols":
+            pending_cols = b["w"]
+        elif t == "tsize":
+            pending_size = b["n"]
         elif t == "callout":
             inner = render(b["body"], ctx, in_callout=True, width=width - 24)
             out.append(Spacer(0, 7))

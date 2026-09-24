@@ -121,7 +121,7 @@ def _cmd(name, lex):
         raw = _raw_group(lex).strip()
         return '<font name="%s">%s</font>' % (SERIF_I, _esc("".join(_CAL.get(c, c) for c in raw)))
     if name in OPERATORS:
-        return '<font name="%s">%s</font>' % (SERIF, name)
+        return '<font name="%s">%s</font>&#8201;' % (SERIF, name)
     if name in (",", ";", " "):
         return "&#8202;"
     if name == "!":
@@ -176,7 +176,8 @@ def render_math(src):
         ch = lex.peek()
         if ch == " ":
             lex.i += 1
-            if out and not out[-1].endswith("&#8202;"):
+            if out and not (out[-1].endswith("&#8202;")
+                            or out[-1].endswith("&#8201;")):
                 out.append("&#8202;")
             continue
         if ch == "_":
@@ -269,6 +270,10 @@ def _tidy(m):
     """Collapse duplicated thin spaces and redundant nested fallback spans."""
     while _THIN + _THIN in m:
         m = m.replace(_THIN + _THIN, _THIN)
+    m = m.replace("&#8201;" + _THIN, "&#8201;").replace(_THIN + "&#8201;", "&#8201;")
+    # Source Serif has no thin-space glyph, so render spacing as sized gaps.
+    m = m.replace("&#8201;", '<font size="5.4"> </font>')
+    m = m.replace(_THIN, '<font size="3.2"> </font>')
     m = re.sub(r'<font name="Fallback">(<font name="Fallback">.*?</font>)</font>', r"\1", m)
     for opener in ("\u230a", "\u2308", "(", "\u27e8"):
         m = m.replace(opener + _THIN, opener)
