@@ -91,6 +91,14 @@ class _MathLexer:
             m = re.match(r"\\([A-Za-z]+|.)", self.s[self.i:])
             self.i += m.end()
             return _cmd(m.group(1), self)
+        if ch.isalpha():
+            m = re.match(r"[A-Za-z]+", self.s[self.i:])
+            word = m.group(0)
+            if len(word) > 1:
+                self.i += len(word)
+                if word in OPERATORS:
+                    return '<font name="%s">%s</font>&#8201;' % (SERIF, word)
+                return '<font name="%s">%s</font>' % (SERIF_I, word)
         self.i += 1
         return _atom(ch)
 
@@ -122,6 +130,9 @@ def _cmd(name, lex):
         return '<font name="%s">%s</font>' % (SERIF_I, _esc("".join(_CAL.get(c, c) for c in raw)))
     if name in OPERATORS:
         return '<font name="%s">%s</font>&#8201;' % (SERIF, name)
+    if name in ("big", "Big", "bigg", "Bigg", "left", "right", "middle",
+                "displaystyle", "textstyle", "limits", "nolimits"):
+        return ""
     if name in (",", ";", " "):
         return "&#8202;"
     if name == "!":
@@ -168,8 +179,29 @@ def _fb_font(s):
     return SERIF
 
 
+_CASES = re.compile(r"\\begin\{(cases|aligned|array)\}(.*?)\\end\{\1\}", re.S)
+
+
+def _render_cases(body):
+    rows = [r for r in re.split(r"\\\\", body) if r.strip()]
+    out = []
+    for r in rows:
+        cells = [c.strip() for c in r.split("&")]
+        lhs = render_math(cells[0])
+        rhs = ""
+        if len(cells) > 1 and cells[1].strip():
+            rhs = ("&nbsp;&nbsp;&nbsp;&nbsp;<font color=\"#6A7180\">%s</font>"
+                   % render_math(cells[1]))
+        out.append("&nbsp;&nbsp;&nbsp;&nbsp;" + lhs + rhs)
+    return "<br/>".join(out)
+
+
 def render_math(src):
     """Render a TeX-ish fragment into ReportLab paragraph markup."""
+    m = _CASES.search(src)
+    if m:
+        return (render_math(src[:m.start()]) + _render_cases(m.group(2))
+                + render_math(src[m.end():]))
     lex = _MathLexer(src)
     out = []
     while lex.i < lex.n:

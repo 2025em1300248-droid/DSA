@@ -141,6 +141,16 @@ def scan(lines):
             i += 1
             continue
 
+        if s.startswith("$$"):
+            buf = [lines[i]]
+            i += 1
+            while i < n and buf[0].strip().count("$$") < 2 and "$$" not in lines[i]:
+                buf.append(lines[i]); i += 1
+            if i < n and buf[0].strip().count("$$") < 2:
+                buf.append(lines[i]); i += 1
+            blocks.append({"t": "p", "text": " ".join(x.strip() for x in buf)})
+            continue
+
         if s in ("---", "***", "___"):
             blocks.append({"t": "hr"})
             i += 1
@@ -194,6 +204,7 @@ def scan(lines):
 def _starts_block(line):
     s = line.strip()
     return (HEAD.match(line) or META.match(line) or FENCE.match(line)
+            or s.startswith("$$")
             or CALL_OPEN.match(line) or s == ":::" or TABLE_ROW.match(line)
             or BULLET.match(line) or NUMBER.match(line) or s.startswith(">")
             or s in ("---", "***", "___"))
@@ -214,6 +225,19 @@ def render(blocks, ctx, in_callout=False, width=None):
     for b in blocks:
         t = b["t"]
         if t == "p":
+            txt = b["text"].strip()
+            if txt.startswith("$$") and txt.endswith("$$") and txt.count("$$") == 2:
+                st = ss["math"]
+                if in_callout:
+                    st = st.clone("math-c")
+                    st.fontSize = 10.0
+                    st.leading = 15
+                if "\\begin{" in txt:
+                    st = st.clone("math-cases")
+                    st.alignment = 0
+                out.append(Paragraph(inline(txt), st))
+                prev = t
+                continue
             st = ss["callout-body"] if in_callout else (
                 ss["body"] if prev in (None, "h2", "h3", "h4", "h1") else ss["body-cont"])
             out.append(Paragraph(_xref(b["text"], ctx), st))
