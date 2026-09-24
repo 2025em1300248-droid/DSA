@@ -68,7 +68,7 @@ what a GPU stream-compaction kernel does after a prefix sum (Chapter 39).
 
 ## Sliding windows
 
-@fig: sliding_window | 165 | A variable-size window. The right edge advances once per element; the left edge advances only when the window becomes invalid. Both move at most $n$ times in total.
+@fig: sliding_window | 172 | A variable-size window. The right edge advances once per element; the left edge advances only when the window becomes invalid. Both move at most $n$ times in total.
 
 The sliding-window template answers questions of the form "the longest (or
 shortest) contiguous subarray satisfying $P$", where $P$ has the property

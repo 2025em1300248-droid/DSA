@@ -277,66 +277,71 @@ class Pen:
                    head=3.2)
         self.text(cx, y_top + height + 2.6, label, size, color, SANS_SB, "c")
 
-    def tree(self, root, x, y, level_h=34, leaf_w=26, r=9.5, kinds=None,
-             edge_labels=False, size=7.8, node_kind_fn=None, draw_null=False):
-        """Lay out and draw a binary tree given as nested (val, left, right)."""
-        leaves = []
+    def tree(self, root, x, y, level_h=32, gap=24, r=9.5, kinds=None,
+             size=7.8, node_kind_fn=None, edge_label_fn=None, null_kind=None):
+        """Draw a binary tree given as nested (val, left, right) tuples.
 
-        def count(n):
+        Layout is by in-order rank, which never overlaps and reads naturally.
+        Returns {value: (x, y)} so callers can annotate specific nodes.
+        """
+        def norm(n):
             if n is None:
-                return 0
-            return max(1, count(n[1]) + count(n[2])) if (len(n) > 2 and (n[1] or n[2])) else 1
+                return None
+            if not isinstance(n, (tuple, list)):
+                return (n, None, None)
+            v = n[0]
+            l = norm(n[1]) if len(n) > 1 else None
+            rr = norm(n[2]) if len(n) > 2 else None
+            return (v, l, rr)
 
+        root = norm(root)
         pos = {}
         counter = [0]
 
         def assign(n, depth):
             if n is None:
-                return None
-            left = n[1] if len(n) > 1 else None
-            right = n[2] if len(n) > 2 else None
-            lx = assign(left, depth + 1)
-            if lx is None and right is None:
-                px = counter[0] * leaf_w
-                counter[0] += 1
-            rx = assign(right, depth + 1)
-            if lx is not None and rx is not None:
-                px = (lx + rx) / 2
-            elif lx is not None:
-                px = lx + leaf_w * 0.5
-            elif rx is not None:
-                px = rx - leaf_w * 0.5
-            pos[id(n)] = (px, -depth * level_h, n)
-            return px
+                return
+            assign(n[1], depth + 1)
+            pos[id(n)] = (counter[0], depth, n)
+            counter[0] += 1
+            assign(n[2], depth + 1)
 
         assign(root, 0)
-        xs = [p[0] for p in pos.values()]
-        span = (max(xs) - min(xs)) if xs else 0
-        x0 = x - span / 2 - min(xs) if xs else x
+        width = max(1, counter[0] - 1)
+        x0 = x - width * gap / 2
 
-        def draw_edges(n):
+        def xy(n):
+            col, depth, _ = pos[id(n)]
+            return (x0 + col * gap, y - depth * level_h)
+
+        def edges(n):
             if n is None:
                 return
-            px, py, _ = pos[id(n)]
-            for child in (n[1] if len(n) > 1 else None, n[2] if len(n) > 2 else None):
+            px, py = xy(n)
+            for child in (n[1], n[2]):
                 if child is not None:
-                    cx, cy, _ = pos[id(child)]
-                    self.line(x0 + px, y + py - r, x0 + cx, y + cy + r,
-                              D.arrow, 0.75)
-                    draw_edges(child)
+                    cx, cy = xy(child)
+                    self.line(px, py - r, cx, cy + r, D.arrow, 0.75)
+                    if edge_label_fn:
+                        lab = edge_label_fn(n[0], child[0])
+                        if lab:
+                            self.text((px + cx) / 2 - 4, (py + cy) / 2 - 2, lab,
+                                      6.2, D.muted, SANS, "c")
+                    edges(child)
 
-        def draw_nodes(n):
+        def nodes(n):
             if n is None:
                 return
-            px, py, _ = pos[id(n)]
+            cx, cy = xy(n)
             k = node_kind_fn(n[0]) if node_kind_fn else (kinds or {}).get(n[0], "")
-            self.circle(x0 + px, y + py, r, str(n[0]), k, size=size)
-            for child in (n[1] if len(n) > 1 else None, n[2] if len(n) > 2 else None):
-                draw_nodes(child)
+            self.circle(cx, cy, r, str(n[0]), k, size=size)
+            nodes(n[1])
+            nodes(n[2])
 
-        draw_edges(root)
-        draw_nodes(root)
-        return {n[2][0]: (x0 + n[0], y + n[1]) for n in pos.values()}
+        edges(root)
+        nodes(root)
+        return {n[2][0]: (x0 + n[0] * gap, y - n[1] * level_h)
+                for n in pos.values()}
 
     def axes(self, x, y, w, h, xlabel=None, ylabel=None, color=None):
         color = color or D.faint

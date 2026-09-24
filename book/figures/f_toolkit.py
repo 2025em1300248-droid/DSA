@@ -205,13 +205,13 @@ def merge_sort(p):
     cw = 20
     y = p.h - 22
     for li, level in enumerate(levels):
-        x = 14
+        x = 34
         for grp in level:
             for j, v in enumerate(grp):
                 p.box(x + j * cw, y, cw - 1.5, 15, str(v),
                       "teal" if li == 0 else "dim", size=6.6, radius=1)
             x += len(grp) * cw + 13
-        p.text(0, y + 4, "split", 6.6, D.faint, SANS, "l")
+        p.text(0, y + 4, "split", 6.6, D.faint, SANS_SB, "l")
         y -= 23
     merged = [
         [[3, 9, 10, 27, 38, 43, 82]],
@@ -220,13 +220,13 @@ def merge_sort(p):
     ]
     y -= 6
     for li, level in enumerate(reversed(merged)):
-        x = 14
+        x = 34
         for grp in level:
             for j, v in enumerate(grp):
                 p.box(x + j * cw, y, cw - 1.5, 15, str(v), "ok", size=6.6,
                       radius=1)
             x += len(grp) * cw + 13
-        p.text(0, y + 4, "merge", 6.6, D.ok_bd, SANS, "l")
+        p.text(0, y + 4, "merge", 6.6, D.ok_bd, SANS_SB, "l")
         y -= 23
     p.text(p.w - 2, p.h - 18, "Θ(log n) levels", 7.2, D.muted, SANS_SB, "r")
     p.text(p.w - 2, p.h - 30, "Θ(n) work per level", 7.2, D.muted, SANS, "r")
@@ -311,5 +311,5 @@ def sliding_window(p):
         p.text(lo * cw + (cw - 2) / 2, yy - 9, "L", 6.4, D.node_bd, SANS_SB, "c")
         p.text(hi * cw + (cw - 2) / 2, yy - 9, "R", 6.4, D.hi_bd, SANS_SB, "c")
         yy -= 30
-    p.text(0, yy + 14, "Each index enters the window once and leaves once: "
+    p.text(0, yy + 8, "Each index enters the window once and leaves once: "
            "Θ(n) total, not Θ(n²).", 7.2, D.muted, SANS_I, "l")
