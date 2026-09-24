@@ -268,7 +268,8 @@ def render(blocks, ctx, in_callout=False, width=None):
         elif t == "callout":
             inner = render(b["body"], ctx, in_callout=True, width=width - 24)
             out.append(Spacer(0, 7))
-            out.append(callout(b["kind"], b["title"], inner, width=width))
+            out.append(KeepTogether(
+                [callout(b["kind"], b["title"], inner, width=width)]))
             out.append(Spacer(0, 4))
         elif t == "fig":
             out.extend(_figure(b["spec"], ctx, width))
