@@ -2,8 +2,8 @@
 from reportlab.lib import colors
 from reportlab.lib.colors import HexColor
 from reportlab.lib.units import mm
-from reportlab.platypus import (Flowable, KeepTogether, Paragraph, Spacer, Table,
-                                TableStyle, CondPageBreak)
+from reportlab.platypus import (Flowable, KeepTogether, Paragraph, Spacer,
+                                Table, TableStyle, CondPageBreak)
 
 from .style import (C, FRAME_W, MONO, MONO_B, MONO_I, SANS, SANS_B, SANS_BLK,
                     SANS_SB, SERIF, SERIF_I, styles)
@@ -36,29 +36,71 @@ KINDS = {
 }
 
 
+class GuardedTable(Table):
+    """A table that refuses splits leaving a title-only head or empty tail."""
+
+    def split(self, aW, aH):
+        parts = Table.split(self, aW, aH)
+        if len(parts) == 2:
+            head, tail = parts
+            nh = len(getattr(head, "_cellvalues", ()) or ())
+            nt = len(getattr(tail, "_cellvalues", ()) or ())
+            if nh < 2 or nt < 1:
+                return []               # not a useful split: move it whole
+        return parts
+
+
+class SoftKeep(KeepTogether):
+    """Keep short blocks whole; let tall ones flow across a page break.
+
+    Plain KeepTogether pushes anything that does not fit to the next page,
+    which leaves a large gap whenever a long callout starts near the bottom.
+    Above `threshold` points we let the content split normally instead.
+    """
+
+    threshold = 300.0
+
+    def split(self, aW, aH):
+        if getattr(self, "_wrapInfo", None) != (aW, aH):
+            self.wrap(aW, aH)
+        if self._H > self.threshold:
+            # A null action as S[0] always fits, so the frame re-processes
+            # the content normally and splits it at a row boundary.
+            return [self.NullActionFlowable()] + self._content[:]
+        return KeepTogether.split(self, aW, aH)
+
+
 def callout(kind, title, body_flowables, width=None):
+    """A tinted box with a coloured spine.
+
+    Built as one table row per inner flowable so that a long callout splits
+    cleanly at a paragraph or code-block boundary instead of being pushed
+    whole onto the next page.
+    """
     label, fg, bg, bd = KINDS.get(kind, KINDS["note"])
     ss = styles()
     head = title if title else label
-    inner = []
     tstyle = ss["callout-title"].clone("ct-%s" % kind)
     tstyle.textColor = fg
-    inner.append(Paragraph(_badge(label, head, fg), tstyle))
-    inner.extend(body_flowables)
+    rows = [[Paragraph(_badge(label, head, fg), tstyle)]]
+    for f in body_flowables:
+        rows.append([f])
     w = width or FRAME_W
-    t = Table([[inner]], colWidths=[w])
-    t.setStyle(TableStyle([
+    t = GuardedTable(rows, colWidths=[w], splitByRow=1, repeatRows=0)
+    style = [
         ("BACKGROUND", (0, 0), (-1, -1), bg),
         ("LINEBEFORE", (0, 0), (0, -1), 2.6, fg),
         ("BOX", (0, 0), (-1, -1), 0.4, bd),
         ("ROUNDEDCORNERS", [0, 3, 3, 0]),
         ("LEFTPADDING", (0, 0), (-1, -1), 11),
         ("RIGHTPADDING", (0, 0), (-1, -1), 10),
-        ("TOPPADDING", (0, 0), (-1, -1), 8),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
+        ("TOPPADDING", (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+        ("TOPPADDING", (0, 0), (-1, 0), 8),
+        ("BOTTOMPADDING", (0, -1), (-1, -1), 9),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
-    ]))
-    t.splitInRow = 1
+    ]
+    t.setStyle(TableStyle(style))
     return t
 
 
@@ -297,16 +339,37 @@ def md_table(header, rows, aligns=None, widths=None, width=None, mono_cols=(),
 
 
 def _auto_widths(header, rows, w, ncol):
+    """Heuristic column widths: wide enough for the widest header word."""
     from reportlab.pdfbase.pdfmetrics import stringWidth
-    weights = []
+    weights, floors = [], []
     for i in range(ncol):
-        cells = [plain(str(header[i]))] if header else []
+        head = plain(str(header[i])) if header else ""
+        cells = [head] if header else []
         cells += [plain(str(r[i])) for r in rows if i < len(r)]
         longest = max((stringWidth(c, SERIF, 8.9) for c in cells), default=40)
         typical = sum(stringWidth(c, SERIF, 8.9) for c in cells) / max(1, len(cells))
         weights.append(max(28.0, min(longest, typical * 2.4 + 26)))
+        widest_word = max((stringWidth(t, SANS_SB, 8.6) for t in head.split()),
+                          default=0.0)
+        floors.append(widest_word + 15.0)
     total = sum(weights)
-    return [w * x / total for x in weights]
+    out = [w * x / total for x in weights]
+    # Widen any column that cannot hold its longest header word, taking the
+    # space from the columns with the most slack.
+    for _ in range(4):
+        deficit = [max(0.0, floors[i] - out[i]) for i in range(ncol)]
+        need = sum(deficit)
+        if need <= 0.5:
+            break
+        slack = [max(0.0, out[i] - floors[i]) for i in range(ncol)]
+        avail = sum(slack)
+        if avail <= 0:
+            break
+        take = min(need, avail)
+        for i in range(ncol):
+            out[i] += deficit[i] * (take / need)
+            out[i] -= slack[i] * (take / avail)
+    return out
 
 
 # --------------------------------------------------------------------------

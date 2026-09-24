@@ -249,6 +249,11 @@ def build_styles():
     ss.add(_p("toc0", fontName=SANS_BLK, fontSize=11.5, leading=16,
               textColor=C.primary, spaceBefore=16, spaceAfter=2))
 
+    ss.add(_p("glance0", fontName=SANS_BLK, fontSize=10.6, leading=15,
+              textColor=C.primary, spaceBefore=13, spaceAfter=1))
+    ss.add(_p("glance1", fontName=SERIF, fontSize=9.6, leading=13.6,
+              textColor=C.body, leftIndent=16, spaceBefore=0.8))
+
     ss.add(_p("chapnum", fontName=SANS_BLK, fontSize=9, leading=11,
               textColor=C.primary))
     ss.add(_p("running", fontName=SANS, fontSize=7.6, leading=9,

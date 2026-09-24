@@ -22,7 +22,8 @@ from reportlab.platypus import (CondPageBreak, KeepTogether, PageBreak,
                                 Paragraph, Spacer)
 
 from .draw import figure as make_figure
-from .flowables import Anchor, HRule, RunningState, callout, code_block, md_table
+from .flowables import (Anchor, HRule, RunningState, SoftKeep, callout,
+                         code_block, md_table)
 from .markup import inline, plain
 from .style import C, FRAME_W, SANS, SANS_B, SERIF, styles
 
@@ -292,7 +293,7 @@ def render(blocks, ctx, in_callout=False, width=None):
         elif t == "callout":
             inner = render(b["body"], ctx, in_callout=True, width=width - 24)
             out.append(Spacer(0, 7))
-            out.append(KeepTogether(
+            out.append(SoftKeep(
                 [callout(b["kind"], b["title"], inner, width=width)]))
             out.append(Spacer(0, 4))
         elif t == "fig":

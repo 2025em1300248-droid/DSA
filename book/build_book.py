@@ -9,7 +9,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from reportlab.platypus import (CondPageBreak, KeepTogether, NextPageTemplate,
-                                PageBreak, Paragraph, Spacer)
+                                PageBreak, Paragraph, Spacer)  # noqa: F401
 
 from engine.doc import BookDoc, make_toc
 from engine.flowables import Anchor, HRule, RunningState, callout
@@ -89,19 +89,27 @@ def build(out_path, only=None, quick=False):
         story.append(HRule(color=C.primary, thickness=1.6, space_before=8,
                            space_after=12, width=90))
         ctx = Ctx(chapter=0, fig_numbers=fig_numbers, toc=False)
-        story += render(body, ctx)
+        fm_story = render(body, ctx)
+        while fm_story and isinstance(fm_story[-1], Spacer):
+            fm_story.pop()
+        story += fm_story
         story.append(PageBreak())
 
-    # Table of contents
+    # Contents at a glance, then the full table of contents
     story.append(RunningState(part=BOOK["title"], chapter="Contents",
                               short="Contents"))
     st = ss["h1"].clone("toch")
     st.fontSize = 21
     st.leading = 25
+    story.append(Paragraph("Contents at a Glance", st))
+    story.append(HRule(color=C.primary, thickness=1.6, space_before=8,
+                       space_after=14, width=90))
+    story.append(make_toc(doc, max_level=1, glance=True))
+    story.append(PageBreak())
     story.append(Paragraph("Contents", st))
     story.append(HRule(color=C.primary, thickness=1.6, space_before=8,
                        space_after=14, width=90))
-    story.append(make_toc(doc))
+    story.append(make_toc(doc, max_level=2))
     story.append(NextPageTemplate("part"))
     story.append(PageBreak())
 
@@ -124,7 +132,10 @@ def build(out_path, only=None, quick=False):
                 meta.get("blurb"), meta.get("objectives"),
                 meta.get("tier", "core"), meta.get("prereq"))
             ctx = Ctx(chapter=num, fig_numbers=fig_numbers)
-            story += render(body, ctx)
+            chapter_story = render(body, ctx)
+            while chapter_story and isinstance(chapter_story[-1], Spacer):
+                chapter_story.pop()          # no trailing glue before a break
+            story += chapter_story
             if pi == last_part and ci == last_ch:
                 break
             story.append(NextPageTemplate("part" if ci == last_ch else "opener"))

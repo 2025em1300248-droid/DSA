@@ -75,7 +75,10 @@ class BookDoc(BaseDocTemplate):
         return str(physical - self.arabic_start + 1)
 
     def mark_arabic_start(self, canv):
-        self._seen_arabic = canv.getPageNumber()
+        n = canv.getPageNumber()
+        self._arabic_changed = (n != self.arabic_start)
+        self.arabic_start = n
+        self._seen_arabic = n
 
     def finish_pass(self):
         if self._seen_arabic:
@@ -141,8 +144,7 @@ class BookDoc(BaseDocTemplate):
             if lvl >= 0:
                 self.notify("TOCEntry", (lvl, txt, self.page, key))
             try:
-                self.canv.addOutlineEntry(txt[:110], key.encode("utf-8"),
-                                          max(0, lvl), 0)
+                self.canv.addOutlineEntry(txt[:110], key, max(0, lvl), 0)
             except Exception:
                 pass
 
@@ -151,9 +153,39 @@ def _cap(s):
     return s
 
 
-def make_toc(doc=None):
+class FilteredTOC(TableOfContents):
+    """A table of contents that only accepts entries within a level range.
+
+    It also refuses to declare itself satisfied while the document's
+    front-matter length is still moving, so the roman/arabic page labels
+    converge before the final pass.
+    """
+
+    max_level = 99
+    book_doc = None
+
+    def notify(self, kind, stuff):
+        if kind == "TOCEntry" and stuff[0] > self.max_level:
+            return
+        TableOfContents.notify(self, kind, stuff)
+
+    def isSatisfied(self):
+        ok = TableOfContents.isSatisfied(self)
+        if self.book_doc is not None and getattr(self.book_doc,
+                                                 "_arabic_changed", False):
+            return False
+        return ok
+
+
+def make_toc(doc=None, max_level=2, glance=False):
     ss = styles()
-    toc = TableOfContents(formatter=(doc._label if doc else None))
-    toc.levelStyles = [ss["toc0"], ss["toc1"], ss["toc2"], ss["toc3"]]
-    toc.dotsMinLevel = 1
+    toc = FilteredTOC(formatter=(doc._label if doc else None))
+    toc.max_level = max_level
+    toc.book_doc = doc
+    if glance:
+        toc.levelStyles = [ss["glance0"], ss["glance1"]]
+        toc.dotsMinLevel = 9
+    else:
+        toc.levelStyles = [ss["toc0"], ss["toc1"], ss["toc2"], ss["toc3"]]
+        toc.dotsMinLevel = 1
     return toc

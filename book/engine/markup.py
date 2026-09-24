@@ -368,4 +368,7 @@ def plain(text):
     t = re.sub(r"\\([A-Za-z]+)", lambda m: GREEK.get(m.group(1), SYMBOLS.get(m.group(1), m.group(1))), t)
     t = re.sub(r"[{}]", "", t)
     t = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", t)
+    for a, b in _ENTITIES:
+        t = t.replace(a, b)
+    t = _smart_quotes(t)
     return t.strip()
