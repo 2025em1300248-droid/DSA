@@ -3,3 +3,4 @@ __pycache__/
 build/*.pdf
 !build/DSA-for-AI-ML-Engineers.pdf
 !build/AI-ML-Engineer-Skill-Map.pdf
+!build/AI-ML-Engineering-Handbook.pdf

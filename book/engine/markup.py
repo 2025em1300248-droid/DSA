@@ -36,6 +36,10 @@ SYMBOLS = {
     "prime": "′", "degree": "°", "perp": "⊥", "parallel": "∥",
     "gg": "≫", "ll": "≪", "subsetneq": "⊊", "models": "⊨", "vdash": "⊢",
     "quad": "  ", "qquad": "    ", "colon": ":", "bmod": " mod ",
+    "top": "\u22a4", "bot": "\u22a5", "ell": "\u2113", "odot": "\u2299",
+    "ast": "\u2217", "triangleq": "\u225c", "lvert": "|", "rvert": "|",
+    "lVert": "\u2016", "rVert": "\u2016", "|": "\u2016", "mid": " | ",
+    "nmid": " \u2224 ", "because": "\u2235", "therefore": "\u2234",
 }
 OPERATORS = {
     "log", "ln", "lg", "exp", "max", "min", "arg", "argmax", "argmin",
@@ -118,9 +122,11 @@ def _cmd(name, lex):
     if name in ("text", "mathrm", "operatorname"):
         raw = _raw_group(lex)
         return '<font name="%s">%s</font>' % (SERIF, _esc(raw))
-    if name == "mathbf":
+    if name in ("mathbf", "boldsymbol", "bm"):
         raw = _raw_group(lex)
-        return "<b>%s</b>" % _esc(raw)
+        return "<b>%s</b>" % render_math(raw) if name != "mathbf" else "<b>%s</b>" % _esc(raw)
+    if name in ("underbrace", "overbrace", "underline", "overline"):
+        return render_math(_raw_group(lex))
     if name == "mathbb":
         raw = _raw_group(lex).strip()
         out = "".join(_BLACKBOARD.get(c, c) for c in raw)

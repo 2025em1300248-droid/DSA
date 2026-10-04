@@ -1,16 +1,20 @@
-# Two books for AI/ML engineers
+# Three books for AI/ML engineers
 
-Two complete, self-contained books, written and typeset from source in this
+Three complete, self-contained books, written and typeset from source in this
 repository. No LaTeX, no external services — the typesetting engine in
-`book/engine/` is part of the repository and builds both volumes.
+`book/engine/` is part of the repository and builds all three volumes.
 
-| | Volume | Pages |
-|---|---|---|
-| **I** | **[Data Structures & Algorithms for AI/ML Engineers](build/DSA-for-AI-ML-Engineers.pdf)** — the algorithmic core, taught from first principles | 367 |
-| **II** | **[The AI/ML Engineer Skill Map](build/AI-ML-Engineer-Skill-Map.pdf)** — the current competency roadmap, role by role | 123 |
+| | Volume | Pages | What it is |
+|---|---|---|---|
+| **I** | **[Data Structures & Algorithms for AI/ML Engineers](build/DSA-for-AI-ML-Engineers.pdf)** | 367 | the algorithmic core, from first principles |
+| **II** | **[The AI/ML Engineer Skill Map](build/AI-ML-Engineer-Skill-Map.pdf)** | 123 | the competency roadmap: what to learn, in what order, for which job |
+| **III** | **[The AI/ML Engineering Handbook](build/AI-ML-Engineering-Handbook.pdf)** | 317 | every skill on that map, taught properly |
 
-The first teaches you the material. The second tells you what material to
-learn, in what order, for which job.
+Volume II says what to learn. Volume III teaches it. Volume I is the
+algorithmic foundation both of them assume.
+
+**Together: 807 pages, 118 chapters, ~210,000 words, 131 vector figures,
+432 runnable listings.**
 
 ---
 
@@ -97,17 +101,60 @@ Chapter 24 is a 28-row, five-level rubric for scoring yourself honestly.
 - Six portfolio project specifications, each containing a real decision
 - Full PDF outline (126 bookmarks), two tables of contents
 
+---
+
+# Volume III — The AI/ML Engineering Handbook
+
+**[→ build/AI-ML-Engineering-Handbook.pdf](build/AI-ML-Engineering-Handbook.pdf)**
+
+The teaching volume: 317 pages, 47 chapters in 8 parts, building every
+competency in the Skill Map from the ground up.
+
+| Part | Chapters | Subject |
+|---|---|---|
+| I | 1–6 | The engineering foundation: modern Python, types and validation, testing ML code, environments, git, containers |
+| II | 7–11 | The mathematics you actually use: linear algebra as data movement, backprop derived, probability, statistics, optimisation |
+| III | 12–16 | Data: SQL and query engines, Polars and Arrow, point-in-time-correct pipelines, features and skew, corpus curation |
+| IV | 17–21 | Classical ML: generalisation, linear models, gradient boosting, calibration and thresholds, explanation |
+| V | 22–28 | Deep learning: tensors and autograd, the training loop, architectures, the transformer from scratch, modern components, debugging, scale |
+| VI | 29–36 | Foundation models: tokenisation and cost, the forward pass, prompting, structure and tools, retrieval, RAG, fine-tuning, preference optimisation |
+| VII | 37–43 | Making it real: evaluation, its statistics, agents, inference and serving, compression, MLOps, hardware |
+| VIII | 44–47 | Judgement: security, privacy and compliance, communication, and when not to use ML |
+
+Every chapter opens with a problem rather than a definition, builds the
+smallest correct version before any optimisation, closes the gap to the
+production version, and ends with the failure modes named by their symptoms.
+Each has a *practice* task that verifies the skill and an exercise set.
+
+- 317 pages, 47 chapters, 8 parts
+- ~82,000 words
+- 233 runnable code listings
+- 45 hand-drawn vector figures
+- 96 captioned reference tables
+- 317 callout boxes, 47 practice tasks, 329 exercises
+- Full PDF outline (315 bookmarks), two tables of contents
+
+Representative listings were executed and checked against known results before
+publication: the autograd engine against central differences, the
+gradient-boosting split finder against a known threshold, BPE for round-trip
+fidelity, BM25 and reciprocal rank fusion against hand-worked examples, PSI
+against known distribution shifts, the cluster bootstrap against a simulated
+clustered set, and the parameter-count formula against the published GPT-2
+sizes.
+
 ## Building it
 
 ```bash
 pip install reportlab pygments pyphen
 
-cd book     && python3 build_book.py    -o ../build/DSA-for-AI-ML-Engineers.pdf
-cd roadmap  && python3 build_roadmap.py -o ../build/AI-ML-Engineer-Skill-Map.pdf
+cd book      && python3 build_book.py      -o ../build/DSA-for-AI-ML-Engineers.pdf
+cd roadmap   && python3 build_roadmap.py   -o ../build/AI-ML-Engineer-Skill-Map.pdf
+cd handbook  && python3 build_handbook.py  -o ../build/AI-ML-Engineering-Handbook.pdf
 ```
 
-Volume I takes about 22 seconds, Volume II about 3. Both are multi-pass
-builds (the tables of contents and page labels have to converge).
+Volume I takes about 20 seconds, Volume II about 3, Volume III about 13. All
+three are multi-pass builds (the tables of contents and page labels have to
+converge).
 
 ## Repository layout
 
@@ -131,16 +178,22 @@ roadmap/
   manifest.py        metadata, 8 parts, 24 chapters
   content/*.md       24 chapters + front matter
   figures_roadmap.py 11 diagrams specific to this volume
+handbook/
+  build_handbook.py  volume III, same engine
+  manifest.py        metadata, 8 parts, 47 chapters
+  content/*.md       47 chapters + front matter
+  figures_handbook.py 45 diagrams specific to this volume
 build/
   DSA-for-AI-ML-Engineers.pdf
   AI-ML-Engineer-Skill-Map.pdf
+  AI-ML-Engineering-Handbook.pdf
 ```
 
 The content format is a small extended Markdown: headings, lists, tables,
 fenced code, `$math$`, `:::callout` blocks, and `@fig:` references to the
 diagram registry. Adding a chapter means adding one file to `content/` and
-one line to `manifest.py`. Volume II imports the engine and figure registry
-from `book/` unchanged and only adds its own content and diagrams.
+one line to `manifest.py`. Volumes II and III import the engine and figure
+registry from `book/` unchanged and only add their own content and diagrams.
 
 ## Fonts
 
