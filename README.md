@@ -1,19 +1,21 @@
-# Three books for AI/ML engineers
+# Four books for AI/ML engineers
 
-Three complete, self-contained books, written and typeset from source in this
+Four complete, self-contained books, written and typeset from source in this
 repository. No LaTeX, no external services — the typesetting engine in
-`book/engine/` is part of the repository and builds all three volumes.
+`book/engine/` is part of the repository and builds all four volumes.
 
 | | Volume | Pages | What it is |
 |---|---|---|---|
 | **I** | **[Data Structures & Algorithms for AI/ML Engineers](build/DSA-for-AI-ML-Engineers.pdf)** | 367 | the algorithmic core, from first principles |
 | **II** | **[The AI/ML Engineer Skill Map](build/AI-ML-Engineer-Skill-Map.pdf)** | 123 | the competency roadmap: what to learn, in what order, for which job |
 | **III** | **[The AI/ML Engineering Handbook](build/AI-ML-Engineering-Handbook.pdf)** | 317 | every skill on that map, taught properly |
+| **IV** | **[Say It Simply](build/Interview-Answers-Plain-English.pdf)** | 118 | 627 interview questions answered in plain English |
 
 Volume II says what to learn. Volume III teaches it. Volume I is the
-algorithmic foundation both of them assume.
+algorithmic foundation both of them assume. Volume IV is a personal interview
+preparation book, answering a 627-question bank in spoken English.
 
-**Together: 807 pages, 118 chapters, ~210,000 words, 131 vector figures,
+**Together: 925 pages, 137 chapters, ~245,000 words, 131 vector figures,
 432 runnable listings.**
 
 ---
@@ -142,6 +144,34 @@ against known distribution shifts, the cluster bootstrap against a simulated
 clustered set, and the parameter-count formula against the published GPT-2
 sizes.
 
+---
+
+# Volume IV — Say It Simply
+
+**[→ build/Interview-Answers-Plain-English.pdf](build/Interview-Answers-Plain-English.pdf)**
+
+A personal interview preparation book: 118 pages, 19 chapters, answering a
+627-question bank in plain spoken English rather than textbook phrasing.
+
+Same questions, same facts — the wording is what changed. Ordinary words
+instead of jargon, two or three sentences per answer, and an explanation of
+any term that could not be avoided. Where an answer can land on one of the
+candidate's own projects, it does.
+
+| Part | Chapters | Subject |
+|---|---|---|
+| I | 1–2 | The behavioural round, and defending the numbers on your own resume |
+| II | 3–4 | Python, SQL, C++ and MongoDB |
+| III | 5–8 | Statistics, data handling, classical ML, imbalance and metrics |
+| IV | 9–10 | Deep learning, CNNs, YOLO and OpenCV |
+| V | 11–13 | NLP and transformers, embeddings and RAG, prompting and agents |
+| VI | 14–16 | MLOps, APIs and Git, ML system design |
+| VII | 17–19 | The four projects defended, the coding round, and the final checklist |
+
+- 118 pages, 19 chapters, 7 parts
+- All 627 questions from the source bank, verified present with none invented
+- ~35,000 words
+
 ## Building it
 
 ```bash
@@ -150,10 +180,11 @@ pip install reportlab pygments pyphen
 cd book      && python3 build_book.py      -o ../build/DSA-for-AI-ML-Engineers.pdf
 cd roadmap   && python3 build_roadmap.py   -o ../build/AI-ML-Engineer-Skill-Map.pdf
 cd handbook  && python3 build_handbook.py  -o ../build/AI-ML-Engineering-Handbook.pdf
+cd interview && python3 build_interview.py -o ../build/Interview-Answers-Plain-English.pdf
 ```
 
-Volume I takes about 20 seconds, Volume II about 3, Volume III about 13. All
-three are multi-pass builds (the tables of contents and page labels have to
+Volume I takes about 20 seconds, Volume II about 3, Volume III about 13, and
+Volume IV about 2. All four are multi-pass builds (the tables of contents and page labels have to
 converge).
 
 ## Repository layout
@@ -178,6 +209,10 @@ roadmap/
   manifest.py        metadata, 8 parts, 24 chapters
   content/*.md       24 chapters + front matter
   figures_roadmap.py 11 diagrams specific to this volume
+interview/
+  build_interview.py volume IV, same engine
+  manifest.py        metadata, 7 parts, 19 chapters
+  content/*.md       19 chapters covering all 627 questions
 handbook/
   build_handbook.py  volume III, same engine
   manifest.py        metadata, 8 parts, 47 chapters
@@ -187,6 +222,7 @@ build/
   DSA-for-AI-ML-Engineers.pdf
   AI-ML-Engineer-Skill-Map.pdf
   AI-ML-Engineering-Handbook.pdf
+  Interview-Answers-Plain-English.pdf
 ```
 
 The content format is a small extended Markdown: headings, lists, tables,
