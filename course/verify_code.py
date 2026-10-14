@@ -60,11 +60,28 @@ struct Node {
     Node* next;
     Node(int value) { data = value; next = nullptr; }
 };
-static Node* findNode(Node*, int) { return nullptr; }
-static Node* buildList(std::vector<int>) { return nullptr; }
-static void printList(Node*) {}
-static void freeList(Node*) {}
 """
+
+# Helpers added only when the block does not define them itself.
+OPTIONAL_STUBS = [
+    ("findNode", "static Node* findNode(Node*, int) { return nullptr; }"),
+    ("buildList", "static Node* buildList(std::vector<int>) { return nullptr; }"),
+    ("printList", "static void printList(Node*) {}"),
+    ("freeList", "static void freeList(Node*) {}"),
+]
+
+
+def node_support(src):
+    """(before, after): the Node definition goes before the block, the helper
+    stubs after it — because a block that defines its own Node must be seen
+    first for the stubs to compile."""
+    before = "" if "struct Node" in src else NODE_DEF
+    after = ""
+    for name, stub in OPTIONAL_STUBS:
+        if re.search(r"\b%s\s*\(" % name, src):
+            continue              # the block defines or declares it itself
+        after += stub + "\n"
+    return before, after
 
 
 def blocks_of(path):
@@ -90,14 +107,18 @@ def wrap(src, opts):
     has_main = re.search(r"\bint\s+main\s*\(", src) is not None
     prelude = "" if "#include" in src else PRELUDE
     # a block that defines its own Node must not get the harness one
-    stubs = HARNESS_VARS + ("" if "struct Node" in src else NODE_DEF)
+    node_pre, node_post = node_support(src)
+    stubs = HARNESS_VARS + node_pre + node_post
     if has_main:
         return prelude + src + "\n"
     # A block tagged `frag` that actually opens with a function definition
     # is a definition block; wrapping it inside main() could never compile.
+    # ignore leading comments and blank lines when sniffing for a definition
+    probe = re.sub(r"\A(?:\s*//[^\n]*\n|\s*\n)+", "", src)
     looks_like_def = re.match(
         r"^\s*(?:static\s+|inline\s+)?[A-Za-z_][\w:<>,*&\s]*?[\w*&]\s+"
-        r"[A-Za-z_]\w*\s*\([^;{]*\)\s*(?:const\s*)?\{", src)
+        r"[A-Za-z_]\w*\s*\([^;{]*\)\s*(?:const\s*)?\{", probe) \
+        or re.match(r"^\s*(?:struct|class|enum|template)\b", probe)
     if "frag" in opts and not looks_like_def:
         body = "\n".join("    " + ln for ln in src.split("\n"))
         return (PRELUDE + stubs +
@@ -128,9 +149,14 @@ def wrap(src, opts):
                 "    (void)head; (void)curr; (void)prev; (void)tail;\n"
                 "    (void)node; (void)temp;\n"
                 "    int* p = nullptr; int* q = nullptr; (void)p; (void)q;\n"
+                "    int a = 1, b = 2, rows = 2, cols = 2;\n"
+                "    (void)a; (void)b; (void)rows; (void)cols;\n"
+                "    std::vector<std::string> words{\"x\"}; (void)words;\n"
+                "    std::string s2; (void)s2;\n"
                 "    {\n" + body + "\n    }\n"
                 "    return 0;\n}\n")
-    return prelude + stubs + src + "\nint main() { return 0; }\n"
+    return (prelude + HARNESS_VARS + node_pre + src + "\n"
+            + node_post + "\nint main() { return 0; }\n")
 
 
 def main():

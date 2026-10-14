@@ -380,7 +380,11 @@ def lla_rotate(p):
     mx = (pos[2][0] + pos[3][0]) / 2
     my = (pos[2][1] + pos[3][1]) / 2
     p.line(mx - 7, my - 7, mx + 7, my + 7, D.bad_bd, 1.4)
-    p.text(mx + 16, my - 4, "cut here", 6.8, D.bad_bd, SANS_SB, "l")
+    # push the label radially outward so it never lands on a node
+    ux, uy = (mx - cx), (my - cy)
+    nrm = (ux * ux + uy * uy) ** 0.5 or 1.0
+    p.text(mx + ux / nrm * 26, my + uy / nrm * 26 - 3, "cut here", 6.8,
+           D.bad_bd, SANS_SB, "c")
     steps = ["1. walk to the tail, counting n",
              "2. tail->next = head   (close the ring)",
              "3. k %= n",
