@@ -93,7 +93,12 @@ def wrap(src, opts):
     stubs = HARNESS_VARS + ("" if "struct Node" in src else NODE_DEF)
     if has_main:
         return prelude + src + "\n"
-    if "frag" in opts:
+    # A block tagged `frag` that actually opens with a function definition
+    # is a definition block; wrapping it inside main() could never compile.
+    looks_like_def = re.match(
+        r"^\s*(?:static\s+|inline\s+)?[A-Za-z_][\w:<>,*&\s]*?[\w*&]\s+"
+        r"[A-Za-z_]\w*\s*\([^;{]*\)\s*(?:const\s*)?\{", src)
+    if "frag" in opts and not looks_like_def:
         body = "\n".join("    " + ln for ln in src.split("\n"))
         return (PRELUDE + stubs +
                 "int main() {\n"
@@ -117,6 +122,9 @@ def wrap(src, opts):
                 "    Node* head = nullptr; Node* curr = head;\n"
                 "    Node* prev = nullptr; Node* tail = nullptr;\n"
                 "    Node* node = nullptr; Node* temp = nullptr;\n"
+                "    Node* slow = nullptr; Node* fast = nullptr;\n"
+                "    Node* lead = nullptr; Node* trail = nullptr;\n"
+                "    (void)slow; (void)fast; (void)lead; (void)trail;\n"
                 "    (void)head; (void)curr; (void)prev; (void)tail;\n"
                 "    (void)node; (void)temp;\n"
                 "    int* p = nullptr; int* q = nullptr; (void)p; (void)q;\n"
