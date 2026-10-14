@@ -77,8 +77,14 @@ def main():
         path = os.path.join(CONTENT, f)
         raw = open(path, encoding="utf-8").read()
 
-        # raw-text checks the parser cannot see
+        # raw-text checks the parser cannot see (skipping fenced code)
+        in_fence = False
         for n, line in enumerate(raw.split("\n"), 1):
+            if line.startswith("```"):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
             if re.match(r"^@fig\s+\w", line):
                 err(f, "line %d: '@fig name' should be '@fig: name'" % n)
             if re.match(r"^@(tbl|cols|tsize)\s+\w", line):
@@ -86,6 +92,9 @@ def main():
                     % (n, line.split()[0][1:]))
             if "\t" in line:
                 err(f, "line %d: literal tab character" % n)
+            if "(c)" in line or "(tm)" in line:
+                err(f, "line %d: '(c)'/'(tm)' renders as a © / ™ symbol"
+                    % n)
         if raw.count("```") % 2:
             err(f, "odd number of ``` fences")
 
