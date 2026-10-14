@@ -70,7 +70,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 v has 3 elements
 first = 10, last = 30
 v[1]  = 20
@@ -120,7 +120,7 @@ int main() {
 
 On g++ (libstdc++) this prints:
 
-```text
+```text nonum
 size  capacity
 0     0
 1     1
@@ -236,7 +236,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 slow: size 1000, capacity 1024
 fast: size 1000, capacity 1000
 ```

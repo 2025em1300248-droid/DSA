@@ -57,7 +57,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 10, 20, 30, 40
 ```
 
@@ -99,7 +99,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 4
 -1
 ```
@@ -170,7 +170,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 10 20 99 30 40 50 
 7 10 20 99 30 40 50 
 ```
@@ -249,7 +249,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 10 30 40 50 
 10 30 40 
 ```
@@ -322,7 +322,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 50 40 30 20 10 
 4 3 2 1 
 42
@@ -376,7 +376,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 min = -3, max = 12
 min = -40, max = -2
 ```
@@ -455,7 +455,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 sum = 101
 avg = 25.25
 big sum = 4000000000
@@ -498,7 +498,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 3
 0
 ```
@@ -578,7 +578,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 unique count = 3
 1 2 3 
 all same -> 1
@@ -653,7 +653,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 1 3 12 0 0 
 1 2 3 
 0 0 0 

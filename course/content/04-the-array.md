@@ -124,7 +124,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 arr[0] = 10
 arr[3] = 40
 after arr[2] = 99: 99
@@ -151,7 +151,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 0 0 3
 ```
 
@@ -214,7 +214,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 index 0 holds 10
 index 1 holds 20
 index 2 holds 30
@@ -268,7 +268,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 2
 -1
 ```
@@ -391,7 +391,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 caught: index was out of range
 ```
 

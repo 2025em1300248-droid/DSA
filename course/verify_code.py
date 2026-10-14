@@ -50,6 +50,7 @@ static void doSomething(int, int) {}
 static void process(int) {}
 static void deleteAt(std::vector<int>&, int) {}
 static void insertAt(std::vector<int>&, int, int) {}
+static bool keep(int) { return true; }
 """
 
 
@@ -86,9 +87,15 @@ def wrap(src, opts):
                 "    std::vector<std::vector<int>> g(4, std::vector<int>(4, 1));\n"
                 "    std::vector<std::vector<int>> grid = g, tri = g;\n"
                 "    int R = 4, C = 4; (void)R; (void)C;\n"
+                "    std::vector<long long> prefix(9, 0); (void)prefix;\n"
+                "    std::unordered_map<long long,int> seen; (void)seen;\n"
+                "    std::unordered_map<int,int> freq{{4,3}}; (void)freq;\n"
                 "    (void)g; (void)grid; (void)tri;\n"
                 "    int n = (int)v.size(), target = 7, i = 0, j = 0;\n"
                 "    int x = 0, total = 0, s = 0, l = 0, best = 0, k = 2;\n"
+                "    int current = 0, count = 0, w = 0, r = 0, lo = 0, hi = 0;\n"
+                "    (void)current; (void)count; (void)w; (void)r;\n"
+                "    (void)lo; (void)hi;\n"
                 "    (void)n; (void)target; (void)i; (void)j; (void)x;\n"
                 "    (void)total; (void)s; (void)l; (void)best; (void)k;\n"
                 "    (void)nums; (void)arr; (void)in; (void)out;\n"

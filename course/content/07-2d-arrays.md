@@ -75,7 +75,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 1 2 3 4 5 6 7 8 9 10 11 12 
 g[2][1]  = 10
 flat[9]  = 10
@@ -112,7 +112,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 6 9 9
 grid rows = 2, cols = 3
 ```
@@ -163,7 +163,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 row-major:    1 2 3 4 5 6 
 column-major: 1 4 2 5 3 6 
 ```
@@ -244,7 +244,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 row 1       = 15
 col 2       = 18
 main diag   = 15
@@ -286,7 +286,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 1 4 7 
 2 5 8 
 3 6 9 
@@ -333,7 +333,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 1 2 3 4 
 5 6 7 8 
 ```
@@ -382,7 +382,7 @@ int main() {
 }
 ```
 
-```text
+```text nonum
 1 
 1 1 
 1 2 1 
