@@ -223,7 +223,7 @@ def mem_new_delete(p):
 @fig("mem_leak")
 def mem_leak(p):
     """The pointer dies; the object does not."""
-    y = p.h - 56
+    y = p.h - 86
     p.box(18, y, 150, 72, None, "teal", radius=3)
     p.text(93, y + 78, "STACK — inside leak1()", 7.2, D.teal_bd, SANS_SB, "c")
     p.box(30, y + 42, 126, 22, "int* p = 3000", "white", size=7.2, radius=2,

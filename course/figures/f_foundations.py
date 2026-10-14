@@ -371,8 +371,9 @@ def bigo_counting(p):
 def bigo_definition(p):
     """c*g(n) is an upper envelope beyond n0."""
     import math
-    x0, y0, W, H = 34, 26, 330, p.h - 60
-    p.axes(x0, y0, W, H, "n", "work")
+    x0, y0, W, H = 40, 26, 318, p.h - 60
+    p.axes(x0, y0, W, H, "n", None)
+    p.text(x0 - 2, y0 + H + 3, "work", 7.2, D.muted, SANS_I, "l")
     f = lambda t: 0.55 * t * t + 6 * t + 14
     g = lambda t: t * t
     xmax, ymax = 10.0, 100.0
@@ -387,7 +388,6 @@ def bigo_definition(p):
     p.text(px, y0 - 11, "n₀", 7.4, D.hi_bd, SANS_SB, "c")
     p.text(px + 6, y0 + H - 6, "beyond here, c·g(n) stays above f(n)", 6.9,
            D.hi_bd, SANS_SB, "l")
-    p.box(px - 150, y0 + H - 3, 1, 1, None, "dim", lw=0)
     p.text(x0 + 2, y0 + H + 8, "before n₀ anything may happen — we do not care",
            6.8, D.muted, SANS_I, "l")
 

@@ -9,12 +9,12 @@ from .kit import NW, NH, GAP, DATA_FRAC, chain, node, null_cap, head_arrow, lege
 def cmp_navigate_modify(p):
     """Every operation is navigate + modify."""
     W, H = 150, 44
-    y = p.h - 56
-    p.text(28 + W / 2, y + H + 14, "NAVIGATE", 7.8, D.ink, SANS_SB, "c")
-    p.text(28 + W / 2, y + H + 4, "get to position i", 6.6, D.muted,
+    y = p.h - 80
+    p.text(28 + W / 2, y + H + 26, "NAVIGATE", 7.8, D.ink, SANS_SB, "c")
+    p.text(28 + W / 2, y + H + 16, "get to position i", 6.6, D.muted,
            SANS_I, "c")
-    p.text(222 + W / 2, y + H + 14, "MODIFY", 7.8, D.ink, SANS_SB, "c")
-    p.text(222 + W / 2, y + H + 4, "do the thing once there", 6.6, D.muted,
+    p.text(222 + W / 2, y + H + 26, "MODIFY", 7.8, D.ink, SANS_SB, "c")
+    p.text(222 + W / 2, y + H + 16, "do the thing once there", 6.6, D.muted,
            SANS_I, "c")
     rows = [("ARRAY", "O(1)", "ok", "O(n)", "bad", "compute the address",
              "shift everything after"),
@@ -22,7 +22,7 @@ def cmp_navigate_modify(p):
              "two pointer writes")]
     for i, (name, nav, nk, mod, mk, nnote, mnote) in enumerate(rows):
         yy = y - i * 56
-        p.text(22, yy + H / 2 - 3, name, 7.4, D.ink, SANS_SB, "r")
+        p.text(28, yy + H + 4, name, 7.4, D.ink, SANS_SB, "l")
         p.box(28, yy, W, H, None, nk, radius=3)
         p.text(28 + W / 2, yy + 24, nav, 13, D.ink, MONO_B, "c")
         p.text(28 + W / 2, yy + 10, nnote, 6.4, D.muted, SANS_I, "c")
@@ -150,3 +150,88 @@ def method_worked(p):
     p.text(34, 17, "a single running max cannot be undone — hence a multiset "
            "(O(n log n)) or two monotonic deques (O(n))",
            6.6, D.muted, SANS_I, "l")
+
+
+@fig("road_levels")
+def road_levels(p):
+    """Five levels, each with its exit signal."""
+    levels = [
+        ("1", "ABSOLUTE BEGINNER", "teal", "loops and indices",
+         "first time, no compiler errors"),
+        ("2", "BASIC OPERATIONS", "ok", "shifting, pointers, memory",
+         "clean under -fsanitize"),
+        ("3", "PATTERN RECOGNITION", "hi", "the ten array patterns",
+         "name the pattern before coding"),
+        ("4", "INTERMEDIATE", "violet", "two patterns combined",
+         "25 minutes, explaining as you go"),
+        ("5", "ADVANCED", "bad", "the method carries you",
+         "brute force in 5 min, idea in 10"),
+    ]
+    y0 = p.h - 26
+    for i, (n, name, kind, needs, signal) in enumerate(levels):
+        y = y0 - i * 32
+        p.box(8, y - 4, 22, 22, n, kind, size=10, radius=3, font=MONO_B)
+        p.text(38, y + 6, name, 7.6, D.ink, SANS_SB, "l")
+        p.text(38, y - 3, needs, 6.4, D.muted, SANS_I, "l")
+        p.text(196, y + 6, "exit signal", 6.2, D.faint, SANS_SB, "l")
+        p.text(196, y - 3, signal, 6.6, D.ok_bd, SANS, "l")
+        if i < 4:
+            p.arrow(19, y - 6, 19, y - 32 + 20, D.faint, 0.8, head=2.8)
+    p.text(8, y0 - 5 * 32 + 10,
+           "each level is defined by its prerequisites and its exit signal — "
+           "not by a number of problems solved", 6.9, D.ink, SANS_SB, "l")
+
+
+@fig("mock_rubric")
+def mock_rubric(p):
+    """What is actually scored."""
+    rows = [("PROBLEM SOLVING", 35, "ok",
+             "did you get there, and did you improve it?"),
+            ("CODING", 30, "hi", "correct, readable, edge cases handled"),
+            ("COMMUNICATION", 20, "violet",
+             "clarified, thought aloud, took hints well"),
+            ("VERIFICATION", 15, "teal",
+             "tested it yourself, stated the complexity")]
+    y0 = p.h - 34
+    for i, (name, pct, kind, note) in enumerate(rows):
+        y = y0 - i * 34
+        p.text(0, y + 6, name, 7.4, D.ink, SANS_SB, "l")
+        p.bar(118, y, 180, 16, pct / 40.0, kind, label="%d%%" % pct)
+        p.text(0, y - 5, note, 6.4, D.muted, SANS_I, "l")
+    p.box(0, 8, p.w, 26, None, "bad", radius=3)
+    p.text(14, 24, "most candidates practise only the top two", 7.4,
+           D.bad_bd, SANS_SB, "l")
+    p.text(14, 13, "the bottom two are 35% of the score, easier to improve, "
+           "and almost never rehearsed", 6.7, D.muted, SANS_I, "l")
+
+
+@fig("ref_plan")
+def ref_plan(p):
+    """Thirty days by theme."""
+    weeks = [("WEEK 1", "teal", "foundations · arrays · first patterns",
+              [1, 2, 3, 4, 5, 6, 7]),
+             ("WEEK 2", "ok", "the array patterns", [8, 9, 10, 11, 12, 13, 14]),
+             ("WEEK 3", "violet", "pointers · linked lists",
+              [15, 16, 17, 18, 19, 20, 21]),
+             ("WEEK 4", "hi", "list problems · hard array problems",
+              [22, 23, 24, 25, 26, 27, 28])]
+    y0 = p.h - 30
+    cw = 26
+    for i, (name, kind, theme, days) in enumerate(weeks):
+        y = y0 - i * 34
+        p.text(0, y + 6, name, 7.2, D.ink, SANS_SB, "l")
+        for j, d in enumerate(days):
+            review = (d % 7 == 0)
+            p.box(58 + j * cw, y, cw - 3, 18, str(d),
+                  "bad" if review else kind, size=7.0, radius=2)
+        p.text(58 + 7 * cw + 10, y + 5, theme, 6.6, D.muted, SANS_I, "l")
+    y = y0 - 4 * 34
+    p.text(0, y + 6, "LAST", 7.2, D.ink, SANS_SB, "l")
+    for j, d in enumerate([29, 30]):
+        p.box(58 + j * cw, y, cw - 3, 18, str(d), "dim", size=7.0, radius=2)
+    p.text(58 + 2 * cw + 10, y + 5, "complexity · method · one recorded mock",
+           6.6, D.muted, SANS_I, "l")
+    legend(p, 0, y - 20, [("bad", "review day — re-solve from blank paper")],
+           gap=200)
+    p.text(0, y - 34, "if short of time, cut a reading day — never a review day",
+           6.9, D.bad_bd, SANS_SB, "l")

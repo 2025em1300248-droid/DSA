@@ -44,15 +44,15 @@ def pat_fast_slow(p):
             kinds[s] = "ok"
         if f < 5:
             kinds[f] = "hi"
-        xs = chain(p, 96, y, vals, w=40, h=20, gap=20, size=8, kinds=kinds)
+        xs = chain(p, 74, y, vals, w=38, h=20, gap=16, size=8, kinds=kinds)
         if s < 5:
             p.text(xs[s] + 11, y - 11, "slow", 6.2, D.ok_bd, SANS_SB, "c")
         if f < 5:
             p.text(xs[f] + 11, y + 22, "fast", 6.2, D.hi_bd, SANS_SB, "c")
         else:
-            p.text(xs[4] + 54, y + 6, "fast is past the end", 6.6, D.hi_bd,
+            p.text(xs[4] + 52, y + 6, "fast is past the end", 6.4, D.hi_bd,
                    SANS, "l")
-        p.text(80, y + 6, "%d" % step, 6.4, D.faint, MONO, "r")
+        p.text(60, y + 6, "%d" % step, 6.4, D.faint, MONO, "r")
     p.text(16, y0 - 4 * 36 + 10,
            "fast covers twice the ground, so slow lands exactly halfway",
            7.0, D.ink, SANS_SB, "l")
@@ -63,10 +63,10 @@ def pat_gap(p):
     """Send one pointer k ahead, then move together."""
     y0 = p.h - 36
     vals = [10, 20, 30, 40, 50]
-    rows = [(0, 2, "lead moves k = 2 ahead"),
-            (1, 3, "now both move together"),
-            (2, 4, "the gap never changes"),
-            (3, 5, "lead off the end → trail is k from it")]
+    rows = [(0, 2, "lead goes k = 2 ahead"),
+            (1, 3, "both move together"),
+            (2, 4, "the gap is fixed"),
+            (3, 5, "lead off the end")]
     for r, (t, l, note) in enumerate(rows):
         y = y0 - r * 34
         kinds = ["dim"] * 5
@@ -74,12 +74,12 @@ def pat_gap(p):
             kinds[t] = "ok"
         if l < 5:
             kinds[l] = "hi"
-        xs = chain(p, 92, y, vals, w=40, h=20, gap=20, size=8, kinds=kinds)
+        xs = chain(p, 68, y, vals, w=38, h=20, gap=16, size=8, kinds=kinds)
         if t < 5:
             p.text(xs[t] + 11, y - 11, "trail", 6.2, D.ok_bd, SANS_SB, "c")
         if l < 5:
             p.text(xs[l] + 11, y + 22, "lead", 6.2, D.hi_bd, SANS_SB, "c")
-        p.text(xs[4] + 54, y + 6, note, 6.5, D.muted, SANS, "l")
+        p.text(xs[4] + 50, y + 6, note, 6.4, D.muted, SANS, "l")
     p.text(16, y0 - 4 * 34 + 8,
            "one pass, O(1) space, and the length is never needed",
            7.0, D.ok_bd, SANS_SB, "l")
@@ -206,14 +206,14 @@ def ll_remove_cycle(p):
 def ll_remove_nth(p):
     """Gap of n+1 from the dummy."""
     y = p.h - 48
-    node(p, 56, y, "—", kind="teal", w=38, h=20, size=7.6)
-    p.arrow(56 + 38 * 0.78, y + 10, 56 + 58 - 2, y + 10, D.arrow, 0.9, head=3)
-    xs = chain(p, 56 + 58, y, [1, 2, 3, 4, 5], w=38, h=20, gap=20, size=7.8,
+    node(p, 36, y, "—", kind="teal", w=34, h=20, size=7.6)
+    p.arrow(36 + 34 * 0.78, y + 10, 36 + 50 - 2, y + 10, D.arrow, 0.9, head=3)
+    xs = chain(p, 36 + 50, y, [1, 2, 3, 4, 5], w=34, h=20, gap=16, size=7.8,
                kinds=["dim", "dim", "ok", "bad", "dim"])
-    p.text(56 + 19, y + 24, "dummy", 6.4, D.teal_bd, SANS_SB, "c")
+    p.text(36 + 17, y + 24, "dummy", 6.4, D.teal_bd, SANS_SB, "c")
     p.pointer(xs[2] + 10, y + 20, "trail")
     p.text(xs[3] + 10, y - 11, "to delete", 6.2, D.bad_bd, SANS_SB, "c")
-    p.text(xs[4] + 56, y + 6, "lead has run off", 6.6, D.hi_bd, SANS, "l")
+    p.text(xs[4] + 44, y + 6, "lead has run off", 6.4, D.hi_bd, SANS, "l")
     p.text(16, y - 30, "n = 2, so the gap is n + 1 = 3 — which leaves trail on the PREDECESSOR",
            6.9, D.ok_bd, SANS_SB, "l")
     p.text(16, y - 42, "starting trail at the dummy means even deleting the head needs no branch",
@@ -347,13 +347,13 @@ def ll_reorder(p):
 def lla_k_group(p):
     """Reverse within groups; leave a short tail."""
     y = p.h - 38
-    xs = chain(p, 64, y, [1, 2, 3, 4, 5, 6, 7], w=36, h=20, gap=16, size=7.8,
+    xs = chain(p, 44, y, [1, 2, 3, 4, 5, 6, 7], w=34, h=20, gap=13, size=7.8,
                kinds=["ok"] * 3 + ["hi"] * 3 + ["dim"])
     p.brace(xs[0], xs[2] + 36, y + 21, "group 1", up=True)
     p.brace(xs[3], xs[5] + 36, y + 21, "group 2", up=True)
     p.brace(xs[6], xs[6] + 36, y + 21, "only 1 left", up=True)
     y2 = y - 52
-    chain(p, 64, y2, [3, 2, 1, 6, 5, 4, 7], w=36, h=20, gap=16, size=7.8,
+    chain(p, 44, y2, [3, 2, 1, 6, 5, 4, 7], w=34, h=20, gap=13, size=7.8,
           kinds=["ok"] * 3 + ["hi"] * 3 + ["dim"])
     p.text(16, y2 - 20, "count k nodes BEFORE reversing — afterwards the count "
            "is unrecoverable", 7.0, D.bad_bd, SANS_SB, "l")
@@ -391,8 +391,8 @@ def lla_rotate(p):
              "4. walk n − k − 1 steps to the new tail",
              "5. newHead = newTail->next; newTail->next = nullptr"]
     for i, s in enumerate(steps):
-        p.text(210, p.h - 24 - i * 15, s, 7.0, D.ink, MONO if i else MONO, "l")
-    p.text(210, p.h - 24 - 5 * 15 - 6,
+        p.text(206, p.h - 24 - i * 15, s, 6.4, D.ink, MONO, "l")
+    p.text(206, p.h - 24 - 5 * 15 - 6,
            "once it is a circle, rotating is just choosing where to cut",
            6.8, D.ok_bd, SANS_SB, "l")
 

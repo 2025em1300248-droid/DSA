@@ -149,7 +149,7 @@ int main() {
 no crash, no error, no warning
 ```
 
-@fig: mem_leak | 168 | A leak. The pointer variable lived on the stack and vanished when the function returned; the object it pointed to is still on the heap, and now nothing in the program knows where it is.
+@fig: mem_leak | 200 | A leak. The pointer variable lived on the stack and vanished when the function returned; the object it pointed to is still on the heap, and now nothing in the program knows where it is.
 
 :::warning Why leaks are so dangerous
 Notice that the program above ran correctly and printed exactly what it should.

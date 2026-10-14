@@ -8,11 +8,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "book"))
 sys.path.insert(0, HERE)
 
+from engine.markup import GREEK, SYMBOLS, OPERATORS    # noqa: E402
 from engine.parser import FIGURES, parse_file          # noqa: E402
 import figures                                         # noqa: F401,E402
 from manifest import BOOK, PARTS                       # noqa: E402
 
 CONTENT = os.path.join(HERE, "content")
+MATH_OK = set(GREEK) | set(SYMBOLS) | set(OPERATORS) | {
+    "frac", "binom", "sqrt", "left", "right", "begin", "end",
+    "cases", "pmatrix", "hat", "bar", "vec", "tilde", "overline",
+    "underline", "mathbb", "mathcal", "mathrm", "mathbf"}
 problems = []
 
 
@@ -121,6 +126,43 @@ def main():
                         err(f, "line %d: %r inside a code block — the mono "
                                "font has no glyph for it" % (n, ch))
                         break
+
+        italic_open = {}
+        # a bare arrow glyph inside an *italic* span collides with the
+        # fallback font; it must sit inside backticks (mono) instead.
+        # Bold and plain text are fine, so look only inside single-* spans.
+        for n, line in enumerate(raw.split("\n"), 1):
+            if not line.strip():
+                italic_open[f] = False       # a blank line ends the span
+                continue
+            if "\u2192" not in line:
+                bare0 = re.sub(r"`[^`]*`", "", line)
+                bare0 = re.sub(r"\*\*[^*]*\*\*", "", bare0)
+                italic_open[f] = (italic_open.get(f, False)
+                                  ^ (bare0.count("*") % 2 == 1))
+                continue
+            bare = re.sub(r"`[^`]*`", "", line)        # drop code spans
+            bare = re.sub(r"\*\*[^*]*\*\*", "", bare)   # drop bold
+            # walk the line tracking whether we are inside a single-* span;
+            # such spans can run across several lines, so carry the state
+            inside = italic_open.get(f, False)
+            flagged = False
+            for ch in bare:
+                if ch == "*":
+                    inside = not inside
+                elif ch == "\u2192" and inside and not flagged:
+                    err(f, "line %d: a bare arrow inside an italic span — "
+                           "wrap it in backticks" % n)
+                    flagged = True
+            italic_open[f] = inside
+
+        # math commands the renderer does not know print as literal text
+        stripped = re.sub(r"^```.*?^```", "", raw, flags=re.M | re.S)
+        for m in re.finditer(r"\$\$?(.+?)\$\$?", stripped, re.S):
+            for cmd in re.findall(r"\\([A-Za-z]+)", m.group(1)):
+                if cmd not in MATH_OK:
+                    err(f, "math command \\%s is not supported — it will "
+                           "print as literal text" % cmd)
 
         blocks = parse_file(path)
         if not blocks or blocks[0]["t"] != "h1":

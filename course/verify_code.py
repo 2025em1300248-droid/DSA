@@ -78,8 +78,10 @@ def node_support(src):
     before = "" if "struct Node" in src else NODE_DEF
     after = ""
     for name, stub in OPTIONAL_STUBS:
-        if re.search(r"\b%s\s*\(" % name, src):
-            continue              # the block defines or declares it itself
+        # skip the stub only when the block DEFINES the function itself —
+        # merely calling it is not a definition, and needs the stub.
+        if re.search(r"^\s*[\w:<>*&\s]+\b%s\s*\(" % name, src, re.M):
+            continue
         after += stub + "\n"
     return before, after
 

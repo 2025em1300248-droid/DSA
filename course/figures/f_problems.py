@@ -18,15 +18,15 @@ def pf_map(p):
         ("ARITHMETIC IDENTITY", "violet",
          ["missing number", "single number"]),
     ]
-    x = 8
+    x = 4
     for title, kind, items in groups:
-        w = 96
+        w = 94
         p.box(x, p.h - 30, w, 20, None, kind, radius=3)
         p.text(x + w / 2, p.h - 24, title, 6.4, D.ink, SANS_SB, "c")
         for i, it in enumerate(items):
             p.box(x + 6, p.h - 56 - i * 22, w - 12, 17, it, "white", size=6.6,
                   radius=2, lw=0.5)
-        x += w + 7
+        x += w + 6
     p.text(8, 10, "four of the ten patterns cover every foundational problem — "
            "which is why the patterns came first", 7.0, D.ink, SANS_SB, "l")
 
@@ -259,8 +259,8 @@ def pa_rain_water(p):
     """Water above each column."""
     h = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
     n = len(h)
-    cw, unit = 29, 17
-    x0, y0 = 46, 44
+    cw, unit = 27, 17
+    x0, y0 = 34, 44
     maxl, maxr = [], []
     m = 0
     for x in h:
@@ -282,9 +282,9 @@ def pa_rain_water(p):
         p.text(x0 + i * cw + cw / 2, y0 - 11, str(h[i]), 6.4, D.faint,
                MONO, "c")
     p.text(x0, y0 - 24, "bar heights", 6.6, D.muted, SANS_I, "l")
-    p.text(x0 + n * cw + 8, y0 + 3 * unit, "6 units", 8.4, D.teal_bd,
+    p.text(x0 + n * cw + 6, y0 + 3 * unit, "6 units", 8.0, D.teal_bd,
            SANS_SB, "l")
-    p.text(x0 + n * cw + 8, y0 + 3 * unit - 11, "of water", 7.0, D.muted,
+    p.text(x0 + n * cw + 6, y0 + 3 * unit - 11, "of water", 6.8, D.muted,
            SANS, "l")
     p.box(26, p.h - 30, p.w - 52, 24, None, "hi", radius=3)
     p.text(40, p.h - 22, "water[i]  =  max(0,  min(maxLeft[i], maxRight[i])  −  h[i])",

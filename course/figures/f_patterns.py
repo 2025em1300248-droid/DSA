@@ -207,19 +207,19 @@ def sw_overlap(p):
 @fig("sw_fixed")
 def sw_fixed(p):
     """A window of 3 stepping along."""
-    cw = 42
-    x0, y0 = 70, p.h - 32
+    cw = 38
+    x0, y0 = 54, p.h - 32
     vals = [2, 1, 5, 1, 3, 2]
     sums = [8, 7, 9, 6]
     for r in range(4):
         y = y0 - r * 32
         kinds = ["hi" if r <= i < r + 3 else "dim" for i in range(6)]
         p.cells(x0, y, vals, cw=cw, ch=20, kinds=kinds, index=False, size=8.2)
-        p.text(x0 + 6 * cw + 12, y + 6, "sum = %d" % sums[r], 7.6,
+        p.text(x0 + 6 * cw + 10, y + 6, "sum %d" % sums[r], 7.4,
                D.ok_bd if sums[r] == 9 else D.muted, MONO_B, "l")
         if r:
-            p.text(x0 + 6 * cw + 72, y + 6, "+%d  −%d" % (vals[r + 2], vals[r - 1]),
-                   7.0, D.hi_bd, MONO, "l")
+            p.text(x0 + 6 * cw + 52, y + 6, "+%d −%d" % (vals[r + 2], vals[r - 1]),
+                   6.8, D.hi_bd, MONO, "l")
     p.text(x0, y0 - 4 * 32 + 2, "one addition and one subtraction per step — never k additions",
            7.2, D.ink, SANS_SB, "l")
 
@@ -227,12 +227,12 @@ def sw_fixed(p):
 @fig("sw_variable")
 def sw_variable(p):
     """Grow, shrink, record."""
-    cw = 40
-    x0, y0 = 72, p.h - 30
+    cw = 36
+    x0, y0 = 58, p.h - 30
     vals = [2, 1, 5, 1, 3, 2]
     rows = [(0, 0, 2, "grow"), (0, 1, 3, "grow"), (0, 2, 8, "grow"),
-            (1, 3, 7, "grow, then shrink once"),
-            (3, 4, 4, "grow, then shrink twice"),
+            (1, 3, 7, "grow, shrink once"),
+            (3, 4, 4, "grow, shrink twice"),
             (3, 5, 6, "grow")]
     for r, (l, rt, sm, note) in enumerate(rows):
         y = y0 - r * 27
@@ -241,11 +241,11 @@ def sw_variable(p):
         p.text(x0 - 8, y + 5, "r=%d" % rt, 6.4, D.muted, MONO, "r")
         p.text(x0 + 6 * cw + 10, y + 5, "sum %-2d   %s" % (sm, note), 6.8,
                D.muted, SANS, "l")
-    p.text(x0, y0 - 6 * 27 - 4,
-           "right advances 6 times; left advances 3 times in total — not 3 times per step",
+    p.text(x0 - 42, y0 - 6 * 27 + 10,
+           "right advances 6 times; left advances 3 times IN TOTAL — not 3 per step",
            7.0, D.ok_bd, SANS_SB, "l")
-    p.text(x0, y0 - 6 * 27 - 15,
-           "that total bound is why the inner while loop does not make it quadratic",
+    p.text(x0 - 42, y0 - 6 * 27 - 1,
+           "that total bound is why the inner while loop is not quadratic",
            6.8, D.muted, SANS_I, "l")
 
 
@@ -349,8 +349,8 @@ def ps_2d(p):
 @fig("bs_halving")
 def bs_halving(p):
     """Three comparisons on ten elements."""
-    cw = 36
-    x0 = 50
+    cw = 34
+    x0 = 44
     vals = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
     steps = [(0, 9, 4, "v[4]=16 < 23  →  go right"),
              (5, 9, 7, "v[7]=56 > 23  →  go left"),
@@ -375,7 +375,7 @@ def bs_halving(p):
 @fig("bs_invariant")
 def bs_invariant(p):
     """The shaded region only shrinks and never loses the target."""
-    cw = 30
+    cw = 27
     x0 = 56
     y0 = p.h - 30
     regions = [(0, 11), (6, 11), (6, 8), (8, 8)]
@@ -385,9 +385,8 @@ def bs_invariant(p):
         if r == 3:
             kinds[8] = "ok"
         p.cells(x0, y, [""] * 12, cw=cw, ch=18, kinds=kinds, index=False)
-        p.text(x0 - 8, y + 5, "step %d" % r, 6.6, D.muted, SANS, "r")
-        p.text(x0 + 12 * cw + 10, y + 5,
-               "[lo, hi] = [%d, %d]" % (lo, hi), 6.8, D.muted, MONO, "l")
+        p.text(x0 - 8, y + 5, "[%d, %d]" % (lo, hi), 6.8, D.muted,
+               MONO, "r")
     p.text(x0, y0 - 4 * 30 + 4,
            "invariant: if the target exists, it is inside the shaded region",
            7.2, D.hi_bd, SANS_SB, "l")
@@ -399,8 +398,8 @@ def bs_invariant(p):
 @fig("bs_first_last")
 def bs_first_last(p):
     """On a match, keep going."""
-    cw = 40
-    x0 = 60
+    cw = 34
+    x0 = 36
     vals = [5, 7, 7, 7, 8, 8, 10]
     for col, (title, idx, arrow, colour) in enumerate([
             ("FIRST occurrence of 7", 1, "keep searching LEFT", D.teal_bd),
@@ -409,12 +408,12 @@ def bs_first_last(p):
         kinds = ["teal" if v == 7 else "dim" for v in vals]
         kinds[idx] = "ok"
         p.cells(x0, y, vals, cw=cw, ch=21, kinds=kinds, index=True, size=8.2)
-        p.text(x0 - 8, y + 6, title, 7.0, colour, SANS_SB, "r")
+        p.text(x0, y + 30, title, 7.0, colour, SANS_SB, "l")
         p.pointer(x0 + idx * cw + cw / 2, y + 21, "answer")
-        p.text(x0 + 7 * cw + 12, y + 6, arrow, 6.9, colour, SANS, "l")
-        p.text(x0 + 7 * cw + 12, y - 4, "after recording the match", 6.5,
+        p.text(x0 + 7 * cw + 10, y + 10, arrow, 6.6, colour, SANS, "l")
+        p.text(x0 + 7 * cw + 10, y + 1, "after recording", 6.4,
                D.muted, SANS_I, "l")
-    p.text(x0 - 48, 6,
+    p.text(x0, 6,
            "two searches give the count in O(log n):  last − first + 1",
            7.2, D.ink, SANS_SB, "l")
 
@@ -463,21 +462,21 @@ def ip_what_counts(p):
 @fig("ip_rotate")
 def ip_rotate(p):
     """Three reversals."""
-    cw = 40
-    x0 = 76
-    rows = [("start", [1, 2, 3, 4, 5, 6, 7], ["dim"] * 4 + ["hi"] * 3, "A = 1..4,  B = 5..7"),
-            ("reverse all", [7, 6, 5, 4, 3, 2, 1], ["hi"] * 3 + ["dim"] * 4, "now Bᴿ Aᴿ — right order, each backwards"),
+    cw = 34
+    x0 = 86
+    rows = [("start", [1, 2, 3, 4, 5, 6, 7], ["dim"] * 4 + ["hi"] * 3, "A = 1..4, B = 5..7"),
+            ("reverse all", [7, 6, 5, 4, 3, 2, 1], ["hi"] * 3 + ["dim"] * 4, "now Bᴿ Aᴿ"),
             ("reverse first 3", [5, 6, 7, 4, 3, 2, 1], ["ok"] * 3 + ["dim"] * 4, "Bᴿ becomes B"),
-            ("reverse last 4", [5, 6, 7, 1, 2, 3, 4], ["ok"] * 3 + ["ok"] * 4, "Aᴿ becomes A  →  B A")]
+            ("reverse last 4", [5, 6, 7, 1, 2, 3, 4], ["ok"] * 3 + ["ok"] * 4, "Aᴿ becomes A → B A")]
     y0 = p.h - 34
     for r, (label, vals, kinds, note) in enumerate(rows):
         y = y0 - r * 36
         p.cells(x0, y, vals, cw=cw, ch=21, kinds=kinds, index=False, size=8.2)
         p.text(x0 - 8, y + 6, label, 6.8, D.muted, SANS_SB, "r")
-        p.text(x0 + 7 * cw + 10, y + 6, note, 6.6, D.muted, SANS_I, "l")
-    p.box(x0 - 60, 8, p.w - (x0 - 60) - 8, 22, None, "ok", radius=3)
-    p.text(x0 - 48, 16, "(A B)ᴿ  =  Bᴿ Aᴿ      —  n/2 + k/2 + (n−k)/2  =  n swaps in all",
-           8.0, D.ink, MONO, "l")
+        p.text(x0 + 7 * cw + 8, y + 6, note, 6.4, D.muted, SANS_I, "l")
+    p.box(8, 8, p.w - 16, 22, None, "ok", radius=3)
+    p.text(20, 16, "(A B)ᴿ = Bᴿ Aᴿ    —    n/2 + k/2 + (n−k)/2  =  n swaps in all",
+           7.6, D.ink, MONO, "l")
 
 
 @fig("ip_index_marking")
@@ -620,8 +619,8 @@ def sort_gifts(p):
 @fig("sort_merge")
 def sort_merge(p):
     """Two pointers walking two sorted arrays."""
-    cw = 36
-    x0 = 72
+    cw = 34
+    x0 = 58
     a = [1, 2, 2, 4, 6]
     b = [2, 3, 4, 4, 9]
     y = p.h - 34
@@ -638,7 +637,7 @@ def sort_merge(p):
     p.cells(x0, y3, [1, 2, 3, "", "", "", "", ""], cw=cw, ch=20,
             kinds=["ok"] * 3 + ["dim"] * 5, index=False, size=8)
     p.text(x0 - 8, y3 + 6, "out", 8.0, D.ok_bd, MONO_B, "r")
-    p.text(x0 + 8 * cw + 10, y3 + 6, "always take the smaller front", 6.8,
+    p.text(x0 + 8 * cw + 8, y3 + 6, "take the smaller front", 6.5,
            D.muted, SANS_I, "l")
     p.text(x0 - 48, y3 - 16,
            "each element is looked at once → O(n + m), and this is the heart of merge sort",
@@ -649,8 +648,8 @@ def sort_merge(p):
 @fig("kad_problem")
 def kad_problem(p):
     """Every contiguous stretch has a sum; we want the biggest."""
-    cw = 38
-    x0 = 56
+    cw = 34
+    x0 = 40
     vals = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
     y = p.h - 34
     kinds = ["dim"] * 9
@@ -664,7 +663,7 @@ def kad_problem(p):
         yy = y - 32 - i * 17
         p.line(x0 + lo * cw + 3, yy + 7, x0 + (hi + 1) * cw - 3, yy + 7,
                D.faint, 2.0)
-        p.text(x0 + 9 * cw + 10, yy + 4, "sum %d" % s, 6.6, D.muted, MONO, "l")
+        p.text(x0 + 9 * cw + 8, yy + 4, "%d" % s, 6.6, D.muted, MONO, "l")
     p.text(x0, y - 32 - 4 * 17 + 2,
            "a few of the 45 candidates — the brute force checks every one",
            6.8, D.muted, SANS_I, "l")

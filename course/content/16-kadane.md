@@ -78,7 +78,7 @@ A sub-array ending at $i$ either
 
 Those are the only two possibilities, so
 
-$$\text{endingHere}[i] = \max\big(v[i],\; \text{endingHere}[i-1] + v[i]\big)$$
+$$\text{endingHere}[i] = \max(\,v[i],\; \text{endingHere}[i-1] + v[i]\,)$$
 
 Now notice *when* restarting wins: exactly when `endingHere[i-1] < 0`. A
 negative prefix can only drag down whatever follows it, so you drop it. A

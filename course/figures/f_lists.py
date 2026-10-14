@@ -25,9 +25,9 @@ def ll_array_vs_list(p):
     p.text(0, y2 + 26, "scattered", 6.6, D.muted, SANS_I, "l")
     chain(p, x0, y2, [10, 20, 30, 40], w=44, h=22, gap=22, size=8.2)
     head_arrow(p, x0, y2, 22, w=44)
-    p.text(x0 + 4 * 66 + 10, y2 + 14, "index 3 → walk 3 links", 6.8,
+    p.text(x0 + 4 * 66 - 4, y2 + 14, "index 3 → walk 3 links", 6.6,
            D.bad_bd, SANS, "l")
-    p.text(x0 + 4 * 66 + 10, y2 + 4, "insert at front → 2 writes", 6.8,
+    p.text(x0 + 4 * 66 - 4, y2 + 4, "insert at front → 2 writes", 6.6,
            D.ok_bd, SANS, "l")
     p.text(0, 4, "each structure is excellent at exactly what the other is bad at",
            7.0, D.ink, SANS_SB, "l")
@@ -191,7 +191,7 @@ def ll_node_anatomy(p):
         p.text(10, yy, code, 7.6, D.ink, MONO, "l")
         if note:
             p.text(150, yy, "— " + note, 6.3, D.muted, SANS_I, "l")
-    x = 310
+    x = 292
     ny = p.h - 74
     node(p, x, ny, 10, w=86, h=34, size=12)
     p.text(x + 43, ny + 42, "new Node(10)", 7.6, D.ok_bd, MONO_B, "c")
@@ -269,7 +269,7 @@ def ll_traverse_steps(p):
 @fig("ll_free")
 def ll_free(p):
     """Save next, advance, then delete."""
-    y = p.h - 56
+    y = p.h - 62
     steps = [("1. doomed = curr", "ok", "remember the node"),
              ("2. curr = curr->next", "hi", "step past it FIRST"),
              ("3. delete doomed", "bad", "now it is safe to destroy")]
@@ -277,7 +277,7 @@ def ll_free(p):
                kinds=["bad", "hi", "dim"])
     p.pointer(xs[0] + 14, y + 22, "doomed")
     p.pointer(xs[1] + 14, y + 22, "curr")
-    head_arrow(p, 90, y, 22, up=44, w=48)
+    head_arrow(p, 90, y, 22, up=30, w=48)
     for i, (code, kind, note) in enumerate(steps):
         yy = y - 42 - i * 22
         p.box(16, yy, 150, 18, None, kind, radius=2)
@@ -297,7 +297,7 @@ def ins_order_rule(p):
              "node->next = prev->next;   then   prev->next = node;"),
             ("WRONG  —  backwards first", False,
              "prev->next = node;   then   node->next = prev->next;")]):
-        x0 = 8 + col * 210
+        x0 = 6 + col * 206
         y = p.h - 48
         p.text(x0, y + 44, title, 7.2, D.ok_bd if ok else D.bad_bd,
                SANS_SB, "l")
@@ -507,14 +507,14 @@ def del_prev_curr(p):
         kinds = ["dim"] * 4
         kinds[step] = "teal"
         kinds[step + 1] = "hi"
-        xs = chain(p, 96, y, [10, 20, 30, 20], w=44, h=20, gap=22, size=8,
+        xs = chain(p, 82, y, [10, 20, 30, 20], w=42, h=20, gap=20, size=8,
                    kinds=kinds)
         p.pointer(xs[step] + 12, y + 20, "prev")
         p.text(xs[step + 1] + 12, y - 11, "curr", 6.4, D.hi_bd, SANS_SB, "c")
         if step == 2:
-            p.text(xs[3] + 60, y + 6, "match — prev is already", 6.8,
+            p.text(xs[3] + 50, y + 6, "match — prev is", 6.6,
                    D.ok_bd, SANS_SB, "l")
-            p.text(xs[3] + 60, y - 4, "the node to reroute", 6.8, D.ok_bd,
+            p.text(xs[3] + 50, y - 4, "already in place", 6.6, D.ok_bd,
                    SANS_SB, "l")
     p.text(16, y0 - 3 * 44 + 14,
            "they advance together and stay adjacent — so prev is never stale",

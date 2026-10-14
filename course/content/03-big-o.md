@@ -271,7 +271,7 @@ Adding those up:
 
 $$(n-1) + (n-2) + \cdots + 1 + 0 = \frac{n(n-1)}{2} = \frac{n^2 - n}{2}$$
 
-Drop the constant $\tfrac{1}{2}$ and the smaller term $-n$, and you are left
+Drop the constant $\frac{1}{2}$ and the smaller term $-n$, and you are left
 with $n^2$. **It is still $O(n^2)$** — it does half the work of the full
 version, but halving is a constant factor, and constants are dropped.
 

@@ -189,19 +189,19 @@ def vec_size_capacity(p):
 @fig("vec_realloc")
 def vec_realloc(p):
     """Allocate bigger, copy across, free the old."""
-    cw = 30
-    x0 = 92
+    cw = 27
+    x0 = 84
     y = p.h - 30
     p.text(0, y + 6, "1. full", 7.0, D.muted, SANS_SB, "l")
     p.cells(x0, y, [10, 20, 30, 40], cw=cw, ch=18, index=False, size=7.4,
             kinds=["ok"] * 4)
-    p.text(x0 + 4 * cw + 10, y + 5, "size = capacity = 4", 6.8, D.muted,
+    p.text(x0 + 4 * cw + 8, y + 5, "size = capacity = 4", 6.6, D.muted,
            SANS_I, "l")
 
     y2 = y - 36
     p.text(0, y2 + 6, "2. allocate", 7.0, D.muted, SANS_SB, "l")
     p.cells(x0, y2, [""] * 8, cw=cw, ch=18, index=False, kinds=["dim"] * 8)
-    p.text(x0 + 8 * cw + 10, y2 + 5, "a new block, twice as big", 6.8,
+    p.text(x0 + 8 * cw + 8, y2 + 5, "twice as big", 6.6,
            D.muted, SANS_I, "l")
 
     y3 = y2 - 40
@@ -211,7 +211,7 @@ def vec_realloc(p):
     for i in range(4):
         p.arrow(x0 + i * cw + cw / 2, y2 - 2, x0 + i * cw + cw / 2, y3 + 20,
                 D.hi_bd, 0.8, head=2.8)
-    p.text(x0 + 8 * cw + 10, y3 + 5, "n copies  →  O(n) for THIS push", 6.8,
+    p.text(x0 + 8 * cw + 8, y3 + 5, "n copies → O(n)", 6.6,
            D.hi_bd, SANS_SB, "l")
 
     y4 = y3 - 36
@@ -355,8 +355,8 @@ def op_dedupe(p):
         p.text(x0 + 6 * cw + 8, y + 5, note, 6.7, D.muted, SANS, "l")
         if w < 6:
             p.text(x0 + w * cw + cw / 2, y - 9, "w", 6.4, D.ok_bd, MONO_B, "c")
-    p.text(x0, y0 - 5 * 30 - 6,
-           "the first w elements are the unique ones; everything past w is rubbish we ignore",
+    p.text(x0 - 30, y0 - 5 * 30 + 4,
+           "the first w elements are the unique ones; everything past w is ignored",
            6.8, D.ok_bd, SANS_SB, "l")
 
 
@@ -394,8 +394,8 @@ def op_move_zeroes(p):
 def mat_grid(p):
     """A grid, and the same grid as one line."""
     cw, ch = 28, 20
-    x0, y0 = 16, p.h - 40
-    p.text(x0, y0 + 26, "HOW WE PICTURE IT", 7.2, D.node_bd, SANS_SB, "l")
+    x0, y0 = 36, p.h - 40
+    p.text(x0 - 30, y0 + 26, "HOW WE PICTURE IT", 7.2, D.node_bd, SANS_SB, "l")
     vals = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]
     kinds = ["", "teal", "hi"]
     for r in range(3):
@@ -405,7 +405,7 @@ def mat_grid(p):
                   font=MONO)
         p.text(x0 - 6, y0 - r * ch + 6, "row %d" % r, 6.2, D.faint, SANS, "r")
 
-    x1 = 176
+    x1 = 184
     p.text(x1, y0 + 26, "HOW IT REALLY SITS IN MEMORY", 7.2, D.hi_bd,
            SANS_SB, "l")
     flat = [v for row in vals for v in row]

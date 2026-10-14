@@ -1,8 +1,8 @@
-# Four books for AI/ML engineers
+# Five books: algorithms, engineering, and a beginner's course
 
-Four complete, self-contained books, written and typeset from source in this
+Five complete, self-contained books, written and typeset from source in this
 repository. No LaTeX, no external services — the typesetting engine in
-`book/engine/` is part of the repository and builds all four volumes.
+`book/engine/` is part of the repository and builds all five volumes.
 
 | | Volume | Pages | What it is |
 |---|---|---|---|
@@ -10,13 +10,16 @@ repository. No LaTeX, no external services — the typesetting engine in
 | **II** | **[The AI/ML Engineer Skill Map](build/AI-ML-Engineer-Skill-Map.pdf)** | 123 | the competency roadmap: what to learn, in what order, for which job |
 | **III** | **[The AI/ML Engineering Handbook](build/AI-ML-Engineering-Handbook.pdf)** | 317 | every skill on that map, taught properly |
 | **IV** | **[Say It Simply](build/Interview-Answers-Plain-English.pdf)** | 118 | 627 interview questions answered in plain English |
+| **V** | **[Arrays & Linked Lists](build/Arrays-and-Linked-Lists.pdf)** | 431 | a complete beginner's course in C++, from what a variable is |
 
 Volume II says what to learn. Volume III teaches it. Volume I is the
 algorithmic foundation both of them assume. Volume IV is a personal interview
-preparation book, answering a 627-question bank in spoken English.
+preparation book, answering a 627-question bank in spoken English. Volume V
+starts further back than any of them: it assumes no data-structures knowledge
+at all and teaches arrays and linked lists in C++ from first principles.
 
-**Together: 925 pages, 137 chapters, ~245,000 words, 131 vector figures,
-432 runnable listings.**
+**Together: 1,356 pages, 177 chapters, ~386,000 words, 277 vector figures,
+682 runnable listings.**
 
 ---
 
@@ -172,6 +175,36 @@ candidate's own projects, it does.
 - All 627 questions from the source bank, verified present with none invented
 - ~35,000 words
 
+# Volume V — Arrays & Linked Lists
+
+**[→ build/Arrays-and-Linked-Lists.pdf](build/Arrays-and-Linked-Lists.pdf)**
+
+A complete beginner's course in C++, starting further back than any other
+volume here: it assumes you can write a `for` loop and nothing else. Forty
+chapters build from what a byte is, through pointers and the heap, to the
+hardest standard interview questions on both structures.
+
+Every concept is drawn before it is coded, traced by hand before it is
+trusted, and followed by the mistakes people actually make. Every pattern is
+derived from a brute force rather than presented finished.
+
+| Part | Chapters | Subject |
+|---|---|---|
+| I | 1–3 | What a data structure is, memory and addresses, Big O from zero |
+| II | 4–7 | Arrays, `std::vector` and capacity, the twelve core operations, 2-D grids |
+| III | 8–17 | The ten array patterns, each derived from its brute force |
+| IV | 18–20 | Twenty-five array problems, graded foundational to advanced |
+| V | 21–22 | Pointers, references, the stack and heap, ownership and leaks |
+| VI | 23–28 | Linked lists built from nothing, ending with reversal traced line by line |
+| VII | 29–32 | Six list patterns and sixteen interview problems |
+| VIII | 33–35 | The array-vs-list cost table with conditions, a 17-step method, C++ standards |
+| IX | 36–40 | Five-level roadmap, quizzes, full answer key, mock interview, 30-day plan |
+
+- 431 pages, 40 chapters, 9 parts, ~141,000 words
+- 146 vector figures, 258 C++ listings
+- Every listing compiles with `g++ -std=c++17`; every printed program output
+  is the real output, diffed against the book by `course/verify_code.py`
+
 ## Building it
 
 ```bash
@@ -181,11 +214,20 @@ cd book      && python3 build_book.py      -o ../build/DSA-for-AI-ML-Engineers.p
 cd roadmap   && python3 build_roadmap.py   -o ../build/AI-ML-Engineer-Skill-Map.pdf
 cd handbook  && python3 build_handbook.py  -o ../build/AI-ML-Engineering-Handbook.pdf
 cd interview && python3 build_interview.py -o ../build/Interview-Answers-Plain-English.pdf
+cd course    && python3 build_book.py      -o ../build/Arrays-and-Linked-Lists.pdf
 ```
 
-Volume I takes about 20 seconds, Volume II about 3, Volume III about 13, and
-Volume IV about 2. All four are multi-pass builds (the tables of contents and page labels have to
-converge).
+Volume I takes about 20 seconds, Volume II about 3, Volume III about 13,
+Volume IV about 2 and Volume V about 35. All five are multi-pass builds (the
+tables of contents and page labels have to converge).
+
+Volume V also ships three checkers, run from `course/`:
+
+```bash
+python3 check.py          # content lint: directives, tables, math, glyphs, lists
+python3 check_figures.py  # every figure measured against its box
+python3 verify_code.py    # compiles all 258 listings, runs 122, diffs the output
+```
 
 ## Repository layout
 
@@ -218,11 +260,20 @@ handbook/
   manifest.py        metadata, 8 parts, 47 chapters
   content/*.md       47 chapters + front matter
   figures_handbook.py 45 diagrams specific to this volume
+course/
+  build_book.py      volume V, same engine
+  manifest.py        metadata, 9 parts, 40 chapters
+  content/*.md       40 chapters + front matter
+  figures/           146 diagrams, built on figures/kit.py
+  check.py           content lint
+  check_figures.py   figure overflow check
+  verify_code.py     compiles and runs every C++ listing
 build/
   DSA-for-AI-ML-Engineers.pdf
   AI-ML-Engineer-Skill-Map.pdf
   AI-ML-Engineering-Handbook.pdf
   Interview-Answers-Plain-English.pdf
+  Arrays-and-Linked-Lists.pdf
 ```
 
 The content format is a small extended Markdown: headings, lists, tables,

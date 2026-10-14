@@ -42,7 +42,7 @@ section.
 
 ## The single idea behind all of it
 
-@fig: cmp_navigate_modify | 180 | Navigation versus modification. An array pays nothing to navigate and everything to modify; a linked list pays everything to navigate and nothing to modify. Each operation's true cost is the sum of the two.
+@fig: cmp_navigate_modify | 200 | Navigation versus modification. An array pays nothing to navigate and everything to modify; a linked list pays everything to navigate and nothing to modify. Each operation's true cost is the sum of the two.
 
 :::insight Separate navigation from modification
 Every operation is really **two** operations: *get to the right place*, then *do

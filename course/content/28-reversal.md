@@ -358,14 +358,14 @@ The recursive call reverses the tail, leaving `30 -> 20` and returning
 `newHead = node(30)`. But node(10) still points at node(20), and node(20) now
 points at `nullptr` — so the picture is:
 
-$$30 \to 20 \to \varnothing \qquad\text{and}\qquad 10 \to 20$$
+$$30 \to 20 \to \emptyset \qquad\text{and}\qquad 10 \to 20$$
 
 Now: `head->next` is node(20). So `head->next->next = head` sets node(20)'s
 `next` to node(10) — attaching 10 onto the end of the reversed part, giving
 $30 \to 20 \to 10 \to 20$. Almost right, but node(10) still points at node(20),
 which is a cycle.
 
-`head->next = nullptr` cuts that, leaving $30 \to 20 \to 10 \to \varnothing$.
+`head->next = nullptr` cuts that, leaving $30 \to 20 \to 10 \to \emptyset$.
 
 Both lines are needed, and in that order: the second destroys the `head->next`
 that the first depends on.

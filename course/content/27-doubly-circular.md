@@ -28,7 +28,7 @@ struct DNode {
 :::definition The doubly linked invariant
 For every pair of adjacent nodes $a$ and $b$:
 
-$$a \texttt{->next} = b \quad\Longleftrightarrow\quad b \texttt{->prev} = a$$
+$$a \rightarrow \text{next} = b \quad\Leftrightarrow\quad b \rightarrow \text{prev} = a$$
 
 Every operation must leave this true. That is the entire difficulty of a doubly
 linked list: there are twice as many pointers to update, and updating only one

@@ -142,7 +142,7 @@ Water at $i$ is held in by the tallest bar somewhere to its left and the tallest
 bar somewhere to its right. The water level is the **lower** of those two — the
 shorter wall is where it would spill over. So:
 
-$$\text{water}[i] = \max\big(0,\; \min(\text{maxLeft}[i],\, \text{maxRight}[i]) - h[i]\big)$$
+$$\text{water}[i] = \max(\,0,\; \min(\text{maxLeft}[i],\, \text{maxRight}[i]) - h[i]\,)$$
 
 The $\max(0, \cdot)$ handles the case where the bar is itself the tallest, so
 nothing sits on it.
