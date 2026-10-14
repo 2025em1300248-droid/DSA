@@ -51,6 +51,14 @@ static void process(int) {}
 static void deleteAt(std::vector<int>&, int) {}
 static void insertAt(std::vector<int>&, int, int) {}
 static bool keep(int) { return true; }
+struct Node {
+    int data;
+    Node* next;
+    Node(int value) { data = value; next = nullptr; }
+};
+static Node* findNode(Node*, int) { return nullptr; }
+static Node* buildList(std::vector<int>) { return nullptr; }
+
 """
 
 
@@ -99,6 +107,12 @@ def wrap(src, opts):
                 "    (void)n; (void)target; (void)i; (void)j; (void)x;\n"
                 "    (void)total; (void)s; (void)l; (void)best; (void)k;\n"
                 "    (void)nums; (void)arr; (void)in; (void)out;\n"
+                "    Node* head = nullptr; Node* curr = head;\n"
+                "    Node* prev = nullptr; Node* tail = nullptr;\n"
+                "    Node* node = nullptr; Node* temp = nullptr;\n"
+                "    (void)head; (void)curr; (void)prev; (void)tail;\n"
+                "    (void)node; (void)temp;\n"
+                "    int* p = nullptr; int* q = nullptr; (void)p; (void)q;\n"
                 "    {\n" + body + "\n    }\n"
                 "    return 0;\n}\n")
     return prelude + HARNESS_VARS + src + "\nint main() { return 0; }\n"

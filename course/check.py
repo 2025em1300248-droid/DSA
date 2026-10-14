@@ -25,11 +25,22 @@ def walk(blocks, fname, in_callout=False):
     for b in blocks:
         t = b["t"]
         if t == "callout":
-            ordered_runs = sum(1 for x in b["body"]
-                               if x["t"] == "list" and x["ordered"])
-            if ordered_runs > 1:
-                err(fname, "numbered list in :::%s is split by another block — "
-                           "the numbering restarts at 1" % b["kind"])
+            seq = [x["t"] for x in b["body"]]
+            for i, t in enumerate(seq):
+                if t != "list" or not b["body"][i]["ordered"]:
+                    continue
+                # a code block or table between two numbered lists means one
+                # list was interrupted; a paragraph between them is deliberate
+                for j in range(i + 1, len(seq)):
+                    if seq[j] in ("code", "table"):
+                        continue
+                    if seq[j] == "list" and b["body"][j]["ordered"] \
+                            and any(seq[k] in ("code", "table")
+                                    for k in range(i + 1, j)):
+                        err(fname, "numbered list in :::%s is interrupted by a "
+                                   "%s block — the numbering restarts at 1"
+                            % (b["kind"], seq[i + 1]))
+                    break
             for inner in b["body"]:
                 if inner["t"] == "list":
                     levels = {lvl for lvl, _, _ in inner["items"]}
