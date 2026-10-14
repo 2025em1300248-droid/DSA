@@ -335,8 +335,8 @@ at random. Always initialise.
 #include <iostream>
 
 int main() {
-    int good = 0;        // explicitly initialised — always 0
-    int bad;             // uninitialised — contains leftover bytes
+    int good = 0;        // explicitly initialised - always 0
+    int bad;             // uninitialised - contains leftover bytes
     std::cout << good << "\n";
     std::cout << bad  << "\n";   // could print 0, 32767, -1094795586, anything
     return 0;

@@ -272,10 +272,10 @@ int integerSqrt(int n) {
     while (lo <= hi) {
         long long mid = lo + (hi - lo) / 2;
         if (mid * mid <= (long long)n) {
-            answer = (int)mid;           // good enough — try larger
+            answer = (int)mid;           // good enough - try larger
             lo = (int)mid + 1;
         } else {
-            hi = (int)mid - 1;           // too big — try smaller
+            hi = (int)mid - 1;           // too big - try smaller
         }
     }
     return answer;

@@ -92,11 +92,11 @@ pointer so easy to create.
 int* one = new int(5);
 int* many = new int[5];
 
-delete one;       // ✓
-delete[] many;    // ✓
+delete one;       // OK 
+delete[] many;    // OK 
 
-delete many;      // ✗ undefined behaviour
-delete[] one;     // ✗ undefined behaviour
+delete many;      // BAD undefined behaviour
+delete[] one;     // BAD undefined behaviour
 ```
 `new[]` records how many objects it made so that `delete[]` can destroy all of
 them. Using plain `delete` on an array destroys only the first and corrupts the

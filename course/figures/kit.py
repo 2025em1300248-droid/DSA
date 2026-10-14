@@ -73,10 +73,10 @@ def chain(p, x, y, values, kinds=None, w=NW, h=NH, gap=GAP, end="nullptr",
     return xs
 
 
-def head_arrow(p, x, y, h=NH, label="head", color=None, up=22):
+def head_arrow(p, x, y, h=NH, label="head", color=None, up=22, w=NW):
     """The labelled arrow that comes down into the first node."""
     color = color or D.node_bd
-    cx = x + NW * DATA_FRAC / 2
+    cx = x + w * DATA_FRAC / 2
     p.arrow(cx, y + h + up, cx, y + h + 3, color, 1.0, head=3.4)
     p.text(cx, y + h + up + 3.5, label, 7.4, color, SANS_SB, "c")
 

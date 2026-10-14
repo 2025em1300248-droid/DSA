@@ -109,6 +109,19 @@ def main():
         if raw.count("```") % 2:
             err(f, "odd number of ``` fences")
 
+        # glyphs the monospace font cannot render, inside code blocks
+        inf = False
+        for n, line in enumerate(raw.split("\n"), 1):
+            if line.startswith("```"):
+                inf = not inf
+                continue
+            if inf:
+                for ch in line:
+                    if ord(ch) > 127 and ch not in "\u2192\u2190":
+                        err(f, "line %d: %r inside a code block — the mono "
+                               "font has no glyph for it" % (n, ch))
+                        break
+
         blocks = parse_file(path)
         if not blocks or blocks[0]["t"] != "h1":
             err(f, "does not start with a '# Title' line")

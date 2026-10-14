@@ -88,8 +88,8 @@ a wrong order — it is undefined behaviour, which in practice means `std::sort`
 reads outside the array and crashes, sometimes only on large inputs.
 
 ```cpp nonum frag
-std::sort(v.begin(), v.end(), [](int a, int b) { return a <= b; });  // ✗
-std::sort(v.begin(), v.end(), [](int a, int b) { return a <  b; });  // ✓
+std::sort(v.begin(), v.end(), [](int a, int b) { return a <= b; });  // BAD
+std::sort(v.begin(), v.end(), [](int a, int b) { return a <  b; });  // OK 
 ```
 The same applies inside multi-key comparators: compare the first key, and only
 if it ties, move to the next — exactly as the `words` comparator above does.

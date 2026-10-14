@@ -51,6 +51,10 @@ static void process(int) {}
 static void deleteAt(std::vector<int>&, int) {}
 static void insertAt(std::vector<int>&, int, int) {}
 static bool keep(int) { return true; }
+"""
+
+# Added only to blocks that do not define their own Node.
+NODE_DEF = """
 struct Node {
     int data;
     Node* next;
@@ -58,7 +62,8 @@ struct Node {
 };
 static Node* findNode(Node*, int) { return nullptr; }
 static Node* buildList(std::vector<int>) { return nullptr; }
-
+static void printList(Node*) {}
+static void freeList(Node*) {}
 """
 
 
@@ -84,11 +89,13 @@ def wrap(src, opts):
     """Turn a block into a complete translation unit."""
     has_main = re.search(r"\bint\s+main\s*\(", src) is not None
     prelude = "" if "#include" in src else PRELUDE
+    # a block that defines its own Node must not get the harness one
+    stubs = HARNESS_VARS + ("" if "struct Node" in src else NODE_DEF)
     if has_main:
         return prelude + src + "\n"
     if "frag" in opts:
         body = "\n".join("    " + ln for ln in src.split("\n"))
-        return (PRELUDE + HARNESS_VARS +
+        return (PRELUDE + stubs +
                 "int main() {\n"
                 "    std::vector<int> v{3, 1, 4, 1, 5, 9, 2, 6};\n"
                 "    std::vector<int> nums = v, arr = v, in = v, out;\n"
@@ -115,7 +122,7 @@ def wrap(src, opts):
                 "    int* p = nullptr; int* q = nullptr; (void)p; (void)q;\n"
                 "    {\n" + body + "\n    }\n"
                 "    return 0;\n}\n")
-    return prelude + HARNESS_VARS + src + "\nint main() { return 0; }\n"
+    return prelude + stubs + src + "\nint main() { return 0; }\n"
 
 
 def main():

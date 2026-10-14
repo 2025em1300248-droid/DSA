@@ -58,7 +58,7 @@ Try every pair.
 for (int i = 0; i < n; ++i)
     for (int j = i + 1; j < n; ++j)
         if (v[i] + v[j] == target)
-            std::cout << i << " " << j;    // found — but only after n²/2 tries
+            std::cout << i << " " << j;    // found - but only after n^2/2 tries
 ```
 
 Correct, and $O(n^2)$: about $n^2/2$ pairs. For $n = 100{,}000$ that is
